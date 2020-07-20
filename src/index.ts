@@ -184,11 +184,11 @@ export class InSales {
     }
   }
 
-  async createPickUpSource(payload: CreatePickUpSource){
-    try{
-      const {data} = await this.instance.post('/admin/pick_up_sources.json', payload);
+  async createPickUpSource(payload: CreatePickUpSource) {
+    try {
+      const { data } = await this.instance.post('/admin/pick_up_sources.json', payload);
       return ResultOk(data);
-    }catch (error) {
+    } catch (error) {
       return ResultFail(error);
     }
   }
