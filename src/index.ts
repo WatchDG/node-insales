@@ -100,5 +100,4 @@ export class InSales {
       return ResultFail(error);
     }
   }
-
 }
