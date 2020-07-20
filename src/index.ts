@@ -1,5 +1,4 @@
-const {ResultFail, ResultOk} = require('node-result');
-
+import {ResultFail, ResultOk} from 'node-result';
 import Axios, {AxiosInstance} from 'axios';
 
 type DeliveryVariantId = number;
