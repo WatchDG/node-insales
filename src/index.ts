@@ -157,6 +157,24 @@ export class InSales {
     }
   }
 
+  async getWebHooks(){
+    try{
+      const {data} = await this.instance.get('/admin/webhooks.json');
+      return ResultOk(data);
+    }catch (error) {
+      return ResultFail(error);
+    }
+  }
+
+  async getWebHook(id: WebHookId){
+    try{
+      const {data} = await this.instance.get(`/admin/webhooks/${id}.json`);
+      return ResultOk(data);
+    }catch (error) {
+      return ResultFail(error);
+    }
+  }
+
   async destroyWebHook(id: WebHookId) {
     try {
       const { data } = await this.instance.delete(`/admin/webhooks/${id}.json`);
@@ -192,7 +210,6 @@ export class InSales {
       return ResultFail(error);
     }
   }
-  // POST /admin/pick_up_sources.json
 
   async destroyPickUpSource(id: PickUpSourceId) {
     try {
