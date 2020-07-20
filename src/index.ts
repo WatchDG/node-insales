@@ -250,7 +250,7 @@ export class InSales {
 
   async createField(payload: CreateField) {
     try {
-      const { data } = await this.instance.post('/admin/fields.xml', payload);
+      const { data } = await this.instance.post('/admin/fields.json', payload);
       return ResultOk(data);
     } catch (error) {
       return ResultFail(error);
