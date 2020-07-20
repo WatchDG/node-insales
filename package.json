@@ -1,0 +1,23 @@
+{
+  "name": "node-insales",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "formatter": "npx prettier --write \"src/**/*.ts\"",
+    "linter": "npx tslint -p tsconfig.json \"src/**/*.ts\"",
+    "preversion": "npm run linter",
+    "version": "npm run formatter",
+    "prepublishOnly": "npm run linter",
+    "prepare": "npm run build",
+    "build": "npx tsc"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "node-result": "^2.0.0"
+  },
+  "devDependencies": {
+    "tslint": "^6.1.2",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.9.5"
+  }
+}
