@@ -11,6 +11,16 @@ type DeliveryVariantUrl = string;
 
 type WebHookId = number;
 
+type FieldId = number;
+type FieldType = string;
+type FieldOfficeTitle = string;
+type FieldDestiny = string;
+type CreateField = {
+    type: FieldType;
+    office_title: FieldOfficeTitle;
+    destiny: FieldDestiny;
+};
+
 type PickUpSourceId = number;
 type PickUpSourceTitle = string;
 type PickUpSourceHttpMethod = 'GET' | 'POST';
@@ -219,4 +229,41 @@ export class InSales {
       return ResultFail(error);
     }
   }
+
+  async getFields(){
+    try{
+      const {data} = await this.instance.get('/admin/fields.json');
+      return ResultOk(data);
+    }catch (error) {
+      return ResultFail(error);
+    }
+  }
+
+  async getField(id: FieldId){
+    try{
+      const {data} = await this.instance.get(`/admin/fields/${id}.json`);
+      return ResultOk(data);
+    }catch (error) {
+      return ResultFail(error);
+    }
+  }
+
+  async createField(payload: CreateField){
+      try{
+          const {data} = await this.instance.post('/admin/fields.xml', payload);
+          return ResultOk(data);
+      }catch (error) {
+          return ResultFail(error);
+      }
+  }
+
+  async destroyField(id: FieldId){
+    try{
+      const {data} = await this.instance.delete(`/admin/fields/${id}.json`);
+      return ResultOk(data);
+    }catch (error) {
+      return ResultFail(error);
+    }
+  }
+
 }
