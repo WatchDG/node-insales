@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "lib": [
-      "esnext"
+      "es5", "es6"
     ],
-    "target": "esnext",
+    "target": "es6",
     "sourceMap": false,
     "strict": true,
     "declaration": true,

@@ -1,5 +1,6 @@
-import {Result, ResultFail, ResultOk} from "node-result";
-import Axios, {AxiosInstance} from "axios";
+const {ResultFail, ResultOk} = require('node-result');
+
+import Axios, {AxiosInstance} from 'axios';
 
 type DeliveryVariantId = number;
 
@@ -12,14 +13,14 @@ type DeliveryVariant = {
         title: DeliveryVariantTitle;
         type: DeliveryVariantType;
         description?: DeliveryVariantDescription;
-    }
+    };
 };
 
 type PaymentDeliveryVariant = {
     id: number;
     delivery_variant_id: number;
     created_at: string;
-}
+};
 
 type PaymentGatewayType = 'PaymentGateway::Custom';
 
@@ -44,7 +45,7 @@ export default class InSales {
         this.instance = Axios.create({baseURL, timeout, headers});
     }
 
-    async getDeliveryVariants(): Promise<Result<null, DeliveryVariant[]> | Result<Error, void>> {
+    async getDeliveryVariants() {
         try {
             const {data} = await this.instance.get('/admin/delivery_variants.json');
             return ResultOk(data);
@@ -53,7 +54,7 @@ export default class InSales {
         }
     }
 
-    async getDeliveryVariant(id: DeliveryVariantId): Promise<Result<null, DeliveryVariant> | Result<Error, void>> {
+    async getDeliveryVariant(id: DeliveryVariantId) {
         try {
             const {data} = await this.instance.get(`/admin/delivery_variants/${id}.json`);
             return ResultOk(data);
@@ -71,7 +72,7 @@ export default class InSales {
         }
     }
 
-    async getPaymentGateways(): Promise<Result<null, PaymentGateway[]> | Result<Error, void>> {
+    async getPaymentGateways() {
         try {
             const {data} = await this.instance.get('/admin/payment_gateways.json');
             return ResultOk(data);
