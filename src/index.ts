@@ -12,13 +12,15 @@ type DeliveryVariantUrl = string;
 type WebHookId = number;
 
 type FieldId = number;
-type FieldType = string;
+type FieldType = 'Field::TextField' | 'Field::TextArea' | 'Field::Checkbox' | 'Field::FileField' | 'Field::Delivery' | 'Field::PickPoint';
 type FieldOfficeTitle = string;
 type FieldDestiny = string;
 type CreateField = {
-  type: FieldType;
-  office_title: FieldOfficeTitle;
-  destiny: FieldDestiny;
+  field:{
+    type: FieldType;
+    office_title: FieldOfficeTitle;
+    destiny: FieldDestiny;
+  }
 };
 
 type PickUpSourceId = number;
