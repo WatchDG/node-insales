@@ -8,6 +8,8 @@ type DeliveryVariantDescription = string;
 
 type WebHookId = number;
 
+type PickUpSourceId = number;
+
 type DeliveryVariant = {
   delivery_variant: {
     title: DeliveryVariantTitle;
@@ -89,4 +91,14 @@ export class InSales {
       return ResultFail(error);
     }
   }
+
+  async destroyPickUpSource(id: PickUpSourceId) {
+    try {
+      const { data } = await this.instance.delete(`/admin/pick_up_sources/${id}.json`);
+      return ResultOk(data);
+    } catch (error) {
+      return ResultFail(error);
+    }
+  }
+
 }
