@@ -12,6 +12,16 @@ type DeliveryVariantUrl = string;
 type WebHookId = number;
 
 type PickUpSourceId = number;
+type PickUpSourceTitle = string;
+type PickUpSourceHttpMethod = 'GET' | 'POST';
+type PickUpSourceUrl = string;
+type PickUpSourcePointInfoUrl = string;
+type CreatePickUpSource = {
+  title: PickUpSourceTitle;
+  http_method: PickUpSourceHttpMethod;
+  url: PickUpSourceUrl;
+  point_info_url: PickUpSourcePointInfoUrl;
+};
 
 type DeliveryVariant = {
   delivery_variant: {
@@ -173,6 +183,16 @@ export class InSales {
       return ResultFail(error);
     }
   }
+
+  async createPickUpSource(payload: CreatePickUpSource){
+    try{
+      const {data} = await this.instance.post('/admin/pick_up_sources.json', payload);
+      return ResultOk(data);
+    }catch (error) {
+      return ResultFail(error);
+    }
+  }
+  // POST /admin/pick_up_sources.json
 
   async destroyPickUpSource(id: PickUpSourceId) {
     try {
