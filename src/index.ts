@@ -10,6 +10,22 @@ type DeliveryVariantAddPaymentGateways = true;
 type DeliveryVariantUrl = string;
 
 type WebHookId = number;
+type WebHookAddress = string;
+type WebHookTopic = 'orders/create' | 'orders/update';
+type WebHookFormatType = 'json' | 'xml';
+type WebHookCreatedAt = string;
+type WebHook = {
+  id: WebHookId;
+  address: WebHookAddress;
+  topic: WebHookTopic;
+  format_type: WebHookFormatType;
+  created_at: WebHookCreatedAt;
+};
+type CreateWebHook = {
+  address: WebHookAddress;
+  topic: WebHookTopic;
+  format_type: WebHookFormatType;
+};
 
 type FieldId = number;
 type FieldType =
@@ -175,7 +191,7 @@ export class InSales {
     }
   }
 
-  async getWebHooks() {
+  async getWebHooks(): Promise<Result<null, WebHook[]> | Result<Error, void>> {
     try {
       const { data } = await this.instance.get('/admin/webhooks.json');
       return ResultOk(data);
@@ -184,9 +200,18 @@ export class InSales {
     }
   }
 
-  async getWebHook(id: WebHookId) {
+  async getWebHook(id: WebHookId): Promise<Result<null, WebHook> | Result<Error, void>> {
     try {
       const { data } = await this.instance.get(`/admin/webhooks/${id}.json`);
+      return ResultOk(data);
+    } catch (error) {
+      return ResultFail(error);
+    }
+  }
+
+  async createWebHook(payload: CreateWebHook): Promise<Result<null, WebHook> | Result<Error, void>>{
+    try {
+      const { data } = await this.instance.post(`/admin/webhooks.json`, payload);
       return ResultOk(data);
     } catch (error) {
       return ResultFail(error);
