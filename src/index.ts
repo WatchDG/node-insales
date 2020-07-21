@@ -209,7 +209,7 @@ export class InSales {
     }
   }
 
-  async createWebHook(payload: CreateWebHook): Promise<Result<null, WebHook> | Result<Error, void>>{
+  async createWebHook(payload: CreateWebHook): Promise<Result<null, WebHook> | Result<Error, void>> {
     try {
       const { data } = await this.instance.post(`/admin/webhooks.json`, payload);
       return ResultOk(data);
