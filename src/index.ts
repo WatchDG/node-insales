@@ -1,4 +1,4 @@
-import { Result, ResultFail, ResultOk } from 'node-result';
+import { Result, ResultOK, ResultFAIL, ResultFail, ResultOk } from 'node-result';
 import Axios, { AxiosInstance } from 'axios';
 
 // DeliveryVariant
@@ -18,14 +18,14 @@ type DeliveryVariantPickUpSourceRemoveAttribute = {
 type DeliveryVariantPickUpSourceAttribute = DeliveryVariantPickUpSourceRemoveAttribute;
 type DeliveryVariantPaymentAttributeId = number;
 type DeliveryVariantPaymentAttributeDestroy = 1;
-type DeliveryVariantPaymentAddAttribute = {
+type AddDeliveryVariantPaymentAttribute = {
   payment_gateway_id: PaymentGatewayId;
 };
-type DeliveryVariantPaymentRemoveAttribute = {
+type RemoveDeliveryVariantPaymentAttribute = {
   _destroy: DeliveryVariantPaymentAttributeDestroy;
   id: DeliveryVariantPaymentAttributeId;
 };
-type DeliveryVariantPaymentAttribute = DeliveryVariantPaymentAddAttribute | DeliveryVariantPaymentRemoveAttribute;
+type DeliveryVariantPaymentAttribute = AddDeliveryVariantPaymentAttribute | RemoveDeliveryVariantPaymentAttribute;
 type DeliveryVariant = {
   title: DeliveryVariantTitle;
   type: DeliveryVariantType;
@@ -110,16 +110,29 @@ type PaymentGatewayId = number;
 type PaymentGatewayTitle = string;
 type PaymentGatewayDescription = string;
 type PaymentGatewayPosition = number;
-type PaymentGatewayType = 'PaymentGateway::Custom';
+type PaymentGatewayType = 'PaymentGateway::Custom' | 'PaymentGateway::Cod';
 type PaymentGatewayCreatedAt = string;
 type PaymentGatewayUpdatedAt = string;
 type PaymentGatewayMargin = string;
 type PaymentGatewayDeliveryVariantId = number;
+type PaymentGatewayAddDeliveryVariants = boolean;
 type PaymentGatewayDeliveryVariant = {
   id: PaymentGatewayDeliveryVariantId;
   delivery_variant_id: DeliveryVariantId;
   created_at: string;
 };
+type PaymentGatewayPaymentDeliveryVariantsAttributeId = number;
+type PaymentGatewayPaymentDeliveryVariantsAttributeDestroy = 1;
+type AddPaymentGatewayPaymentDeliveryVariantsAttribute = {
+  delivery_variant_id: DeliveryVariantId;
+};
+type RemovePaymentGatewayPaymentDeliveryVariantsAttribute = {
+  _destroy: PaymentGatewayPaymentDeliveryVariantsAttributeDestroy;
+  id: PaymentGatewayPaymentDeliveryVariantsAttributeId;
+};
+type PaymentGatewayPaymentDeliveryVariantsAttribute =
+  | AddPaymentGatewayPaymentDeliveryVariantsAttribute
+  | RemovePaymentGatewayPaymentDeliveryVariantsAttribute;
 type PaymentGateway = {
   id: PaymentGatewayId;
   position: PaymentGatewayPosition;
@@ -132,6 +145,25 @@ type PaymentGateway = {
   title: PaymentGatewayTitle;
   description: PaymentGatewayDescription;
   payment_delivery_variants: PaymentGatewayDeliveryVariant[];
+};
+type CreatePaymentGateway = {
+  payment_gateway: {
+    title: PaymentGatewayTitle;
+    type: PaymentGatewayType;
+    margin?: PaymentGatewayMargin;
+    position?: PaymentGatewayPosition;
+    description?: PaymentGatewayDescription;
+    add_delivery_variants?: PaymentGatewayAddDeliveryVariants;
+  };
+};
+type UpdatePaymentGateway = {
+  payment_gateway: {
+    title?: PaymentGatewayTitle;
+    margin?: PaymentGatewayMargin;
+    position?: PaymentGatewayPosition;
+    description?: PaymentGatewayDescription;
+    payment_delivery_variants_attributes?: PaymentGatewayPaymentDeliveryVariantsAttribute[];
+  };
 };
 
 /**
@@ -146,8 +178,9 @@ export class InSales {
 
   /**
    * Получить все варианты доставки.
+   * @return Promise<ResultOK<DeliveryVariant[]> | ResultFAIL<Error>>
    */
-  async getDeliveryVariants(): Promise<Result<null, DeliveryVariant[]> | Result<Error, void>> {
+  async getDeliveryVariants(): Promise<ResultOK<DeliveryVariant[]> | ResultFAIL<Error>> {
     try {
       const { data } = await this.instance.get('/admin/delivery_variants.json');
       return ResultOk(data);
@@ -157,10 +190,11 @@ export class InSales {
   }
 
   /**
-   * Получить вариант доставки по идентификатору.
+   * Получить вариант доставки.
    * @param {DeliveryVariantId} id - идентификатор варианта доставки
+   * @return Promise<ResultOK<DeliveryVariant> | ResultFAIL<Error>>
    */
-  async getDeliveryVariant(id: DeliveryVariantId): Promise<Result<null, DeliveryVariant> | Result<Error, void>> {
+  async getDeliveryVariant(id: DeliveryVariantId): Promise<ResultOK<DeliveryVariant> | ResultFAIL<Error>> {
     try {
       const { data } = await this.instance.get(`/admin/delivery_variants/${id}.json`);
       return ResultOk(data);
@@ -170,10 +204,11 @@ export class InSales {
   }
 
   /**
-   * Создать новый вариант доставки.
+   * Создать вариант доставки.
    * @param {CreateDeliveryVariant} payload - объект создания варианта доставки
+   * @return Promise<ResultOK<DeliveryVariant> | ResultFAIL<Error>>
    */
-  async createDeliveryVariant(payload: CreateDeliveryVariant) {
+  async createDeliveryVariant(payload: CreateDeliveryVariant): Promise<ResultOK<DeliveryVariant> | ResultFAIL<Error>> {
     try {
       const { data } = await this.instance.post('/admin/delivery_variants.json', payload);
       return ResultOk(data);
@@ -183,7 +218,7 @@ export class InSales {
   }
 
   /**
-   * Обновить существующий вариант доставки.
+   * Обновить вариант доставки.
    * @param {DeliveryVariantId} id - идентификатор варианта доставки
    * @param {UpdateDeliveryVariant} payload - объект обновления варианта доставки
    */
@@ -197,7 +232,7 @@ export class InSales {
   }
 
   /**
-   * Удалить существующий вариант доставки.
+   * Удалить вариант доставки.
    * @param {DeliveryVariantId} id - идентификатор варианта доставки
    */
   async destroyDeliveryVariant(id: DeliveryVariantId) {
@@ -221,10 +256,65 @@ export class InSales {
 
   /**
    * Получить все платежные шлюзы.
+   * @return Promise<ResultOK<PaymentGateway[]> | ResultFAIL<Error>>
    */
-  async getPaymentGateways() {
+  async getPaymentGateways(): Promise<ResultOK<PaymentGateway[]> | ResultFAIL<Error>> {
     try {
       const { data } = await this.instance.get('/admin/payment_gateways.json');
+      return ResultOk(data);
+    } catch (error) {
+      return ResultFail(error);
+    }
+  }
+
+  /**
+   * Получить платежный шлюз.
+   * @param {PaymentGatewayId} id - идентификатор платежного шлюза
+   * @return Promise<ResultOK<PaymentGateway> | ResultFAIL<Error>>
+   */
+  async getPaymentGateway(id: PaymentGatewayId): Promise<ResultOK<PaymentGateway> | ResultFAIL<Error>> {
+    try {
+      const { data } = await this.instance.get(`/admin/payment_gateways/${id}.json`);
+      return ResultOk(data);
+    } catch (error) {
+      return ResultFail(error);
+    }
+  }
+
+  /**
+   * Создать платежный шлюз.
+   * @param {createPaymentGateway} payload - объект создания платежного шлюза
+   */
+  async createPaymentGateway(payload: CreatePaymentGateway) {
+    try {
+      const { data } = await this.instance.post('/admin/payment_gateways.json', payload);
+      return ResultOk(data);
+    } catch (error) {
+      return ResultFail(error);
+    }
+  }
+
+  /**
+   * Обновить платежный шлюз.
+   * @param {PaymentGatewayId} id - идентификатор платежного шлюза
+   * @param {UpdatePaymentGateway} payload - объект обновления платежного шлюза
+   */
+  async updatePaymentGateway(id: PaymentGatewayId, payload: UpdatePaymentGateway) {
+    try {
+      const { data } = await this.instance.put(`/admin/payment_gateways/${id}.json`, payload);
+      return ResultOk(data);
+    } catch (error) {
+      return ResultFail(error);
+    }
+  }
+
+  /**
+   * Удалить платежный шлюз.
+   * @param {PaymentGatewayId} id - идентификатор платежного шлюза
+   */
+  async destroyPaymentGateway(id: PaymentGatewayId) {
+    try {
+      const { data } = await this.instance.delete(`/admin/payment_gateways/${id}.json`);
       return ResultOk(data);
     } catch (error) {
       return ResultFail(error);
@@ -244,7 +334,7 @@ export class InSales {
   }
 
   /**
-   * Получить веб хук по идентификатору.
+   * Получить веб хук.
    * @param {WebHookId} id - идентификатор веб хука
    */
   async getWebHook(id: WebHookId): Promise<Result<null, WebHook> | Result<Error, void>> {
@@ -257,7 +347,7 @@ export class InSales {
   }
 
   /**
-   * Создать новый веб хук.
+   * Создать веб хук.
    * @param {CreateWebHook} payload - объект создания веб хука
    */
   async createWebHook(payload: CreateWebHook): Promise<Result<null, WebHook> | Result<Error, void>> {
@@ -270,7 +360,7 @@ export class InSales {
   }
 
   /**
-   * Удалить существующий веб хук.
+   * Удалить веб хук.
    * @param {WebHookId} id - идентификатор веб хука
    */
   async destroyWebHook(id: WebHookId) {
@@ -295,7 +385,7 @@ export class InSales {
   }
 
   /**
-   * Получить источник пунктов выдачи по идентификатору.
+   * Получить источник пунктов выдачи.
    * @param {PickUpSourceId} id - идентификатор источника пунктов выдачи
    */
   async getPickUpSource(id: PickUpSourceId) {
@@ -308,7 +398,7 @@ export class InSales {
   }
 
   /**
-   * Создать новый источник пунктов выдачи.
+   * Создать источник пунктов выдачи.
    * @param {CreatePickUpSource} payload - объект создания источника пунктов выдачи
    */
   async createPickUpSource(payload: CreatePickUpSource) {
@@ -321,7 +411,7 @@ export class InSales {
   }
 
   /**
-   * Удалить существующий источник пунктов выдачи.
+   * Удалить источник пунктов выдачи.
    * @param {PickUpSourceId} id - идентификатор источника пунктов выдачи
    */
   async destroyPickUpSource(id: PickUpSourceId) {
@@ -346,7 +436,7 @@ export class InSales {
   }
 
   /**
-   * Получить поле по идентификатору.
+   * Получить поле.
    * @param {FieldId} id - идентификатор поля
    */
   async getField(id: FieldId) {
@@ -359,7 +449,7 @@ export class InSales {
   }
 
   /**
-   * Создать новое поле.
+   * Создать поле.
    * @param {CreateField} payload - объект создания поля
    */
   async createField(payload: CreateField) {
@@ -372,7 +462,7 @@ export class InSales {
   }
 
   /**
-   * Удалить существуюшие поле.
+   * Удалить поле.
    * @param {FieldId} id - идентификатор поля
    */
   async destroyField(id: FieldId) {

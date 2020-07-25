@@ -12,7 +12,8 @@ InSales
     * [.updateDeliveryVariant(id, payload)](#InSales+updateDeliveryVariant)
     * [.destroyDeliveryVariant(id)](#InSales+destroyDeliveryVariant)
     * [.createDeliveryVariantPickUpSourceRemoveAttribute(deliveryVariantPickUpSourceAttributeId)](#InSales+createDeliveryVariantPickUpSourceRemoveAttribute)
-    * [.getPaymentGateways()](#InSales+getPaymentGateways)
+    * [.getPaymentGateways()](#InSales+getPaymentGateways) ⇒
+    * [.getPaymentGateway(id)](#InSales+getPaymentGateway) ⇒
     * [.getWebHooks()](#InSales+getWebHooks)
     * [.getWebHook(id)](#InSales+getWebHook)
     * [.createWebHook(payload)](#InSales+createWebHook)
@@ -90,10 +91,23 @@ InSales
 
 <a name="InSales+getPaymentGateways"></a>
 
-### inSales.getPaymentGateways()
+### inSales.getPaymentGateways() ⇒
 Получить все платежные шлюзы.
 
 **Kind**: instance method of [<code>InSales</code>](#InSales)  
+**Returns**: Promise<ResultOk<PaymentGateway[]>|ResultFail<Error>>  
+<a name="InSales+getPaymentGateway"></a>
+
+### inSales.getPaymentGateway(id) ⇒
+Получить платежный шлюз по идентификатору.
+
+**Kind**: instance method of [<code>InSales</code>](#InSales)  
+**Returns**: Promise<ResultOk<PaymentGateway>|ResultFail<Error>>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>PaymentGatewayId</code> | идентификатор платежного шлюза |
+
 <a name="InSales+getWebHooks"></a>
 
 ### inSales.getWebHooks()
