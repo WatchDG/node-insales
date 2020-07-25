@@ -219,6 +219,9 @@ export class InSales {
     return { _destroy: 1, id: deliveryVariantPickUpSourceAttributeId };
   }
 
+  /**
+   * Получить все платежные шлюзы.
+   */
   async getPaymentGateways() {
     try {
       const { data } = await this.instance.get('/admin/payment_gateways.json');
@@ -228,6 +231,9 @@ export class InSales {
     }
   }
 
+  /**
+   * Получить все веб хуки.
+   */
   async getWebHooks(): Promise<Result<null, WebHook[]> | Result<Error, void>> {
     try {
       const { data } = await this.instance.get('/admin/webhooks.json');
@@ -237,6 +243,10 @@ export class InSales {
     }
   }
 
+  /**
+   * Получить веб хук по идентификатору.
+   * @param {WebHookId} id - идентификатор веб хука
+   */
   async getWebHook(id: WebHookId): Promise<Result<null, WebHook> | Result<Error, void>> {
     try {
       const { data } = await this.instance.get(`/admin/webhooks/${id}.json`);
@@ -246,6 +256,10 @@ export class InSales {
     }
   }
 
+  /**
+   * Создать новый веб хук.
+   * @param {CreateWebHook} payload - объект создания веб хука
+   */
   async createWebHook(payload: CreateWebHook): Promise<Result<null, WebHook> | Result<Error, void>> {
     try {
       const { data } = await this.instance.post(`/admin/webhooks.json`, payload);
@@ -255,6 +269,10 @@ export class InSales {
     }
   }
 
+  /**
+   * Удалить существующий веб хук.
+   * @param {WebHookId} id - идентификатор веб хука
+   */
   async destroyWebHook(id: WebHookId) {
     try {
       const { data } = await this.instance.delete(`/admin/webhooks/${id}.json`);

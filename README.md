@@ -12,6 +12,11 @@ InSales
     * [.updateDeliveryVariant(id, payload)](#InSales+updateDeliveryVariant)
     * [.destroyDeliveryVariant(id)](#InSales+destroyDeliveryVariant)
     * [.createDeliveryVariantPickUpSourceRemoveAttribute(deliveryVariantPickUpSourceAttributeId)](#InSales+createDeliveryVariantPickUpSourceRemoveAttribute)
+    * [.getPaymentGateways()](#InSales+getPaymentGateways)
+    * [.getWebHooks()](#InSales+getWebHooks)
+    * [.getWebHook(id)](#InSales+getWebHook)
+    * [.createWebHook(payload)](#InSales+createWebHook)
+    * [.destroyWebHook(id)](#InSales+destroyWebHook)
     * [.getPickUpSources()](#InSales+getPickUpSources)
     * [.getPickUpSource(id)](#InSales+getPickUpSource)
     * [.createPickUpSource(payload)](#InSales+createPickUpSource)
@@ -82,6 +87,51 @@ InSales
 | Param | Type | Description |
 | --- | --- | --- |
 | deliveryVariantPickUpSourceAttributeId | <code>DeliveryVariantPickUpSourceAttributeId</code> | идентификатор атрибута источника точки |
+
+<a name="InSales+getPaymentGateways"></a>
+
+### inSales.getPaymentGateways()
+Получить все платежные шлюзы.
+
+**Kind**: instance method of [<code>InSales</code>](#InSales)  
+<a name="InSales+getWebHooks"></a>
+
+### inSales.getWebHooks()
+Получить все веб хуки.
+
+**Kind**: instance method of [<code>InSales</code>](#InSales)  
+<a name="InSales+getWebHook"></a>
+
+### inSales.getWebHook(id)
+Получить веб хук по идентификатору.
+
+**Kind**: instance method of [<code>InSales</code>](#InSales)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>WebHookId</code> | идентификатор веб хука |
+
+<a name="InSales+createWebHook"></a>
+
+### inSales.createWebHook(payload)
+Создать новый веб хук.
+
+**Kind**: instance method of [<code>InSales</code>](#InSales)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| payload | <code>CreateWebHook</code> | объект создания веб хука |
+
+<a name="InSales+destroyWebHook"></a>
+
+### inSales.destroyWebHook(id)
+Удалить существующий веб хук.
+
+**Kind**: instance method of [<code>InSales</code>](#InSales)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>WebHookId</code> | идентификатор веб хука |
 
 <a name="InSales+getPickUpSources"></a>
 
