@@ -6,14 +6,17 @@ InSales
 **Kind**: global class  
 
 * [InSales](#InSales)
-    * [.getDeliveryVariants()](#InSales+getDeliveryVariants)
-    * [.getDeliveryVariant(id)](#InSales+getDeliveryVariant)
-    * [.createDeliveryVariant(payload)](#InSales+createDeliveryVariant)
+    * [.getDeliveryVariants()](#InSales+getDeliveryVariants) ⇒
+    * [.getDeliveryVariant(id)](#InSales+getDeliveryVariant) ⇒
+    * [.createDeliveryVariant(payload)](#InSales+createDeliveryVariant) ⇒
     * [.updateDeliveryVariant(id, payload)](#InSales+updateDeliveryVariant)
     * [.destroyDeliveryVariant(id)](#InSales+destroyDeliveryVariant)
     * [.createDeliveryVariantPickUpSourceRemoveAttribute(deliveryVariantPickUpSourceAttributeId)](#InSales+createDeliveryVariantPickUpSourceRemoveAttribute)
     * [.getPaymentGateways()](#InSales+getPaymentGateways) ⇒
     * [.getPaymentGateway(id)](#InSales+getPaymentGateway) ⇒
+    * [.createPaymentGateway(payload)](#InSales+createPaymentGateway)
+    * [.updatePaymentGateway(id, payload)](#InSales+updatePaymentGateway)
+    * [.destroyPaymentGateway(id)](#InSales+destroyPaymentGateway)
     * [.getWebHooks()](#InSales+getWebHooks)
     * [.getWebHook(id)](#InSales+getWebHook)
     * [.createWebHook(payload)](#InSales+createWebHook)
@@ -29,16 +32,18 @@ InSales
 
 <a name="InSales+getDeliveryVariants"></a>
 
-### inSales.getDeliveryVariants()
+### inSales.getDeliveryVariants() ⇒
 Получить все варианты доставки.
 
 **Kind**: instance method of [<code>InSales</code>](#InSales)  
+**Returns**: Promise<ResultOK<DeliveryVariant[]> | ResultFAIL<Error>>  
 <a name="InSales+getDeliveryVariant"></a>
 
-### inSales.getDeliveryVariant(id)
-Получить вариант доставки по идентификатору.
+### inSales.getDeliveryVariant(id) ⇒
+Получить вариант доставки.
 
 **Kind**: instance method of [<code>InSales</code>](#InSales)  
+**Returns**: Promise<ResultOK<DeliveryVariant> | ResultFAIL<Error>>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -46,10 +51,11 @@ InSales
 
 <a name="InSales+createDeliveryVariant"></a>
 
-### inSales.createDeliveryVariant(payload)
-Создать новый вариант доставки.
+### inSales.createDeliveryVariant(payload) ⇒
+Создать вариант доставки.
 
 **Kind**: instance method of [<code>InSales</code>](#InSales)  
+**Returns**: Promise<ResultOK<DeliveryVariant> | ResultFAIL<Error>>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -58,7 +64,7 @@ InSales
 <a name="InSales+updateDeliveryVariant"></a>
 
 ### inSales.updateDeliveryVariant(id, payload)
-Обновить существующий вариант доставки.
+Обновить вариант доставки.
 
 **Kind**: instance method of [<code>InSales</code>](#InSales)  
 
@@ -70,7 +76,7 @@ InSales
 <a name="InSales+destroyDeliveryVariant"></a>
 
 ### inSales.destroyDeliveryVariant(id)
-Удалить существующий вариант доставки.
+Удалить вариант доставки.
 
 **Kind**: instance method of [<code>InSales</code>](#InSales)  
 
@@ -95,14 +101,48 @@ InSales
 Получить все платежные шлюзы.
 
 **Kind**: instance method of [<code>InSales</code>](#InSales)  
-**Returns**: Promise<ResultOk<PaymentGateway[]>|ResultFail<Error>>  
+**Returns**: Promise<ResultOK<PaymentGateway[]> | ResultFAIL<Error>>  
 <a name="InSales+getPaymentGateway"></a>
 
 ### inSales.getPaymentGateway(id) ⇒
-Получить платежный шлюз по идентификатору.
+Получить платежный шлюз.
 
 **Kind**: instance method of [<code>InSales</code>](#InSales)  
-**Returns**: Promise<ResultOk<PaymentGateway>|ResultFail<Error>>  
+**Returns**: Promise<ResultOK<PaymentGateway> | ResultFAIL<Error>>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>PaymentGatewayId</code> | идентификатор платежного шлюза |
+
+<a name="InSales+createPaymentGateway"></a>
+
+### inSales.createPaymentGateway(payload)
+Создать платежный шлюз.
+
+**Kind**: instance method of [<code>InSales</code>](#InSales)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| payload | <code>createPaymentGateway</code> | объект создания платежного шлюза |
+
+<a name="InSales+updatePaymentGateway"></a>
+
+### inSales.updatePaymentGateway(id, payload)
+Обновить платежный шлюз.
+
+**Kind**: instance method of [<code>InSales</code>](#InSales)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>PaymentGatewayId</code> | идентификатор платежного шлюза |
+| payload | <code>UpdatePaymentGateway</code> | объект обновления платежного шлюза |
+
+<a name="InSales+destroyPaymentGateway"></a>
+
+### inSales.destroyPaymentGateway(id)
+Удалить платежный шлюз.
+
+**Kind**: instance method of [<code>InSales</code>](#InSales)  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -117,7 +157,7 @@ InSales
 <a name="InSales+getWebHook"></a>
 
 ### inSales.getWebHook(id)
-Получить веб хук по идентификатору.
+Получить веб хук.
 
 **Kind**: instance method of [<code>InSales</code>](#InSales)  
 
@@ -128,7 +168,7 @@ InSales
 <a name="InSales+createWebHook"></a>
 
 ### inSales.createWebHook(payload)
-Создать новый веб хук.
+Создать веб хук.
 
 **Kind**: instance method of [<code>InSales</code>](#InSales)  
 
@@ -139,7 +179,7 @@ InSales
 <a name="InSales+destroyWebHook"></a>
 
 ### inSales.destroyWebHook(id)
-Удалить существующий веб хук.
+Удалить веб хук.
 
 **Kind**: instance method of [<code>InSales</code>](#InSales)  
 
@@ -156,7 +196,7 @@ InSales
 <a name="InSales+getPickUpSource"></a>
 
 ### inSales.getPickUpSource(id)
-Получить источник пунктов выдачи по идентификатору.
+Получить источник пунктов выдачи.
 
 **Kind**: instance method of [<code>InSales</code>](#InSales)  
 
@@ -167,7 +207,7 @@ InSales
 <a name="InSales+createPickUpSource"></a>
 
 ### inSales.createPickUpSource(payload)
-Создать новый источник пунктов выдачи.
+Создать источник пунктов выдачи.
 
 **Kind**: instance method of [<code>InSales</code>](#InSales)  
 
@@ -178,7 +218,7 @@ InSales
 <a name="InSales+destroyPickUpSource"></a>
 
 ### inSales.destroyPickUpSource(id)
-Удалить существующий источник пунктов выдачи.
+Удалить источник пунктов выдачи.
 
 **Kind**: instance method of [<code>InSales</code>](#InSales)  
 
@@ -195,7 +235,7 @@ InSales
 <a name="InSales+getField"></a>
 
 ### inSales.getField(id)
-Получить поле по идентификатору.
+Получить поле.
 
 **Kind**: instance method of [<code>InSales</code>](#InSales)  
 
@@ -206,7 +246,7 @@ InSales
 <a name="InSales+createField"></a>
 
 ### inSales.createField(payload)
-Создать новое поле.
+Создать поле.
 
 **Kind**: instance method of [<code>InSales</code>](#InSales)  
 
@@ -217,7 +257,7 @@ InSales
 <a name="InSales+destroyField"></a>
 
 ### inSales.destroyField(id)
-Удалить существуюшие поле.
+Удалить поле.
 
 **Kind**: instance method of [<code>InSales</code>](#InSales)  
 
