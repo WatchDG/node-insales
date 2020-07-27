@@ -245,10 +245,21 @@ export class InSales {
   }
 
   /**
+   * Создать атрибут добавления платежного щлюза.
+   * @param {PaymentGatewayId} paymentGatewayId - идентификатор платежного шлюза
+   * @return AddDeliveryVariantPaymentAttribute
+   */
+  createAddDeliveryVariantPaymentAttribute(paymentGatewayId: PaymentGatewayId){
+    return {
+      payment_gateway_id: paymentGatewayId
+    }
+  }
+
+  /**
    * Создать атрибут удаления источника точек.
    * @param {DeliveryVariantPickUpSourceAttributeId} deliveryVariantPickUpSourceAttributeId - идентификатор атрибута источника точки
    */
-  createDeliveryVariantPickUpSourceRemoveAttribute(
+  createRemoveDeliveryVariantPickUpSourceAttribute(
     deliveryVariantPickUpSourceAttributeId: DeliveryVariantPickUpSourceAttributeId,
   ): DeliveryVariantPickUpSourceRemoveAttribute {
     return { _destroy: 1, id: deliveryVariantPickUpSourceAttributeId };
@@ -480,7 +491,7 @@ export class InSales {
   ) {
     try {
       const deliveryVariantPickUpSourceAttributes = deliveryVariantPickUpSourceAttributeIds.map(
-        this.createDeliveryVariantPickUpSourceRemoveAttribute,
+        this.createRemoveDeliveryVariantPickUpSourceAttribute,
       );
       const payload = {
         delivery_variant: {
@@ -492,4 +503,24 @@ export class InSales {
       return ResultFail(error);
     }
   }
+
+  async addPaymentsToDeliveryVariant(
+      deliveryVariantId: DeliveryVariantId,
+      deliveryVariantPaymentAttributeIds: PaymentGatewayId[]
+  ){
+    try{
+      const deliveryVariantPaymentAttributes = deliveryVariantPaymentAttributeIds.map(
+          this.createAddDeliveryVariantPaymentAttribute
+      );
+      const payload = {
+        delivery_variant:{
+          payment_delivery_variants_attributes: deliveryVariantPaymentAttributes
+        }
+      };
+      return this.updateDeliveryVariant(deliveryVariantId, payload);
+    }catch (error) {
+      return ResultFail(error);
+    }
+  }
+
 }
