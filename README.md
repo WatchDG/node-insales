@@ -11,7 +11,8 @@ InSales
     * [.createDeliveryVariant(payload)](#InSales+createDeliveryVariant) ⇒
     * [.updateDeliveryVariant(id, payload)](#InSales+updateDeliveryVariant)
     * [.destroyDeliveryVariant(id)](#InSales+destroyDeliveryVariant)
-    * [.createDeliveryVariantPickUpSourceRemoveAttribute(deliveryVariantPickUpSourceAttributeId)](#InSales+createDeliveryVariantPickUpSourceRemoveAttribute)
+    * [.createAddDeliveryVariantPaymentAttribute(paymentGatewayId)](#InSales+createAddDeliveryVariantPaymentAttribute) ⇒
+    * [.createRemoveDeliveryVariantPickUpSourceAttribute(deliveryVariantPickUpSourceAttributeId)](#InSales+createRemoveDeliveryVariantPickUpSourceAttribute)
     * [.getPaymentGateways()](#InSales+getPaymentGateways) ⇒
     * [.getPaymentGateway(id)](#InSales+getPaymentGateway) ⇒
     * [.createPaymentGateway(payload)](#InSales+createPaymentGateway)
@@ -84,9 +85,21 @@ InSales
 | --- | --- | --- |
 | id | <code>DeliveryVariantId</code> | идентификатор варианта доставки |
 
-<a name="InSales+createDeliveryVariantPickUpSourceRemoveAttribute"></a>
+<a name="InSales+createAddDeliveryVariantPaymentAttribute"></a>
 
-### inSales.createDeliveryVariantPickUpSourceRemoveAttribute(deliveryVariantPickUpSourceAttributeId)
+### inSales.createAddDeliveryVariantPaymentAttribute(paymentGatewayId) ⇒
+Создать атрибут добавления платежного щлюза.
+
+**Kind**: instance method of [<code>InSales</code>](#InSales)  
+**Returns**: AddDeliveryVariantPaymentAttribute  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| paymentGatewayId | <code>PaymentGatewayId</code> | идентификатор платежного шлюза |
+
+<a name="InSales+createRemoveDeliveryVariantPickUpSourceAttribute"></a>
+
+### inSales.createRemoveDeliveryVariantPickUpSourceAttribute(deliveryVariantPickUpSourceAttributeId)
 Создать атрибут удаления источника точек.
 
 **Kind**: instance method of [<code>InSales</code>](#InSales)  

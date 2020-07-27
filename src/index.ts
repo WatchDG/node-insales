@@ -249,10 +249,10 @@ export class InSales {
    * @param {PaymentGatewayId} paymentGatewayId - идентификатор платежного шлюза
    * @return AddDeliveryVariantPaymentAttribute
    */
-  createAddDeliveryVariantPaymentAttribute(paymentGatewayId: PaymentGatewayId){
+  createAddDeliveryVariantPaymentAttribute(paymentGatewayId: PaymentGatewayId) {
     return {
-      payment_gateway_id: paymentGatewayId
-    }
+      payment_gateway_id: paymentGatewayId,
+    };
   }
 
   /**
@@ -505,22 +505,21 @@ export class InSales {
   }
 
   async addPaymentsToDeliveryVariant(
-      deliveryVariantId: DeliveryVariantId,
-      deliveryVariantPaymentAttributeIds: PaymentGatewayId[]
-  ){
-    try{
+    deliveryVariantId: DeliveryVariantId,
+    deliveryVariantPaymentAttributeIds: PaymentGatewayId[],
+  ) {
+    try {
       const deliveryVariantPaymentAttributes = deliveryVariantPaymentAttributeIds.map(
-          this.createAddDeliveryVariantPaymentAttribute
+        this.createAddDeliveryVariantPaymentAttribute,
       );
       const payload = {
-        delivery_variant:{
-          payment_delivery_variants_attributes: deliveryVariantPaymentAttributes
-        }
+        delivery_variant: {
+          payment_delivery_variants_attributes: deliveryVariantPaymentAttributes,
+        },
       };
       return this.updateDeliveryVariant(deliveryVariantId, payload);
-    }catch (error) {
+    } catch (error) {
       return ResultFail(error);
     }
   }
-
 }
