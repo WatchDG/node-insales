@@ -6,6 +6,8 @@ InSales
 **Kind**: global class  
 
 * [InSales](#InSales)
+    * [.getAccount()](#InSales+getAccount)
+    * [.getOrder(id)](#InSales+getOrder)
     * [.getDeliveryVariants()](#InSales+getDeliveryVariants) ⇒
     * [.getDeliveryVariant(id)](#InSales+getDeliveryVariant) ⇒
     * [.createDeliveryVariant(payload)](#InSales+createDeliveryVariant) ⇒
@@ -25,11 +27,29 @@ InSales
     * [.getPickUpSources()](#InSales+getPickUpSources)
     * [.getPickUpSource(id)](#InSales+getPickUpSource)
     * [.createPickUpSource(payload)](#InSales+createPickUpSource)
+    * [.updatePickUpSource(id, payload)](#InSales+updatePickUpSource)
     * [.destroyPickUpSource(id)](#InSales+destroyPickUpSource)
     * [.getFields()](#InSales+getFields)
     * [.getField(id)](#InSales+getField)
     * [.createField(payload)](#InSales+createField)
     * [.destroyField(id)](#InSales+destroyField)
+
+<a name="InSales+getAccount"></a>
+
+### inSales.getAccount()
+Получить аккаунт.
+
+**Kind**: instance method of [<code>InSales</code>](#InSales)  
+<a name="InSales+getOrder"></a>
+
+### inSales.getOrder(id)
+Получить заказ.
+
+**Kind**: instance method of [<code>InSales</code>](#InSales)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>OrderId</code> | идентификатор заказа. |
 
 <a name="InSales+getDeliveryVariants"></a>
 
@@ -227,6 +247,18 @@ InSales
 | Param | Type | Description |
 | --- | --- | --- |
 | payload | <code>CreatePickUpSource</code> | объект создания источника пунктов выдачи |
+
+<a name="InSales+updatePickUpSource"></a>
+
+### inSales.updatePickUpSource(id, payload)
+Обновить источник пунктов выдачи.
+
+**Kind**: instance method of [<code>InSales</code>](#InSales)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>PickUpSourceId</code> | идентификатор источника пунктов выдачи |
+| payload | <code>UpdatePickUpSource</code> | объект обновлления источника пунктов выдачи |
 
 <a name="InSales+destroyPickUpSource"></a>
 
