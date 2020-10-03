@@ -1,6 +1,9 @@
 import { Result, ResultOK, ResultFAIL, ResultFail, ResultOk } from 'node-result';
 import Axios, { AxiosInstance } from 'axios';
 
+// Domain
+type DomainId = number;
+
 // Order
 type OrderId = number;
 
@@ -246,6 +249,31 @@ export class InSales {
   async getOrder(id: OrderId) {
     try {
       const { data } = await this.instance.get(`/admin/orders/${id}.json`);
+      return ResultOk(data);
+    } catch (error) {
+      return ResultFail(error);
+    }
+  }
+
+  /**
+   * Получить все домены.
+   */
+  async getDomains() {
+    try {
+      const { data } = await this.instance.get(`/admin/domains.json`);
+      return ResultOk(data);
+    } catch (error) {
+      return ResultFail(error);
+    }
+  }
+
+  /**
+   * Получить домен.
+   * @param {DomainId} id - идентификатор домена.
+   */
+  async getDomain(id: DomainId) {
+    try {
+      const { data } = await this.instance.get(`/admin/domains/${id}.json`);
       return ResultOk(data);
     } catch (error) {
       return ResultFail(error);

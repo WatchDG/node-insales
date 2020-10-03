@@ -8,6 +8,8 @@ InSales
 * [InSales](#InSales)
     * [.getAccount()](#InSales+getAccount)
     * [.getOrder(id)](#InSales+getOrder)
+    * [.getDomains()](#InSales+getDomains)
+    * [.getDomain(id)](#InSales+getDomain)
     * [.getDeliveryVariants()](#InSales+getDeliveryVariants) ⇒
     * [.getDeliveryVariant(id)](#InSales+getDeliveryVariant) ⇒
     * [.createDeliveryVariant(payload)](#InSales+createDeliveryVariant) ⇒
@@ -50,6 +52,23 @@ InSales
 | Param | Type | Description |
 | --- | --- | --- |
 | id | <code>OrderId</code> | идентификатор заказа. |
+
+<a name="InSales+getDomains"></a>
+
+### inSales.getDomains()
+Получить все домены.
+
+**Kind**: instance method of [<code>InSales</code>](#InSales)  
+<a name="InSales+getDomain"></a>
+
+### inSales.getDomain(id)
+Получить домен.
+
+**Kind**: instance method of [<code>InSales</code>](#InSales)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>DomainId</code> | идентификатор домена. |
 
 <a name="InSales+getDeliveryVariants"></a>
 
