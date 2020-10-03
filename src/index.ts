@@ -1,6 +1,47 @@
 import { Result, ResultOK, ResultFAIL, ResultFail, ResultOk } from 'node-result';
 import Axios, { AxiosInstance } from 'axios';
 
+// Order
+type OrderId = number;
+
+// Account
+type AccountId = number;
+type AccountSubdomain = string;
+type AccountOrganization = string;
+type AccountContactPhone = string;
+type AccountNotificationEmail = string;
+type AccountBlocked = boolean;
+type AccountCreatedAt = string;
+type AccountEmail = string;
+type AccountCountry = string;
+type AccountCity = string;
+type AccountState = string;
+
+type AccountOwnerId = number;
+type AccountOwnerName = string;
+type AccountOwnerEmail = string;
+type AccountOwnerCreatedAt = string;
+type AccountOwner = {
+  id: AccountOwnerId;
+  name: AccountOwnerName;
+  email: AccountOwnerEmail;
+  created_at: AccountOwnerCreatedAt;
+};
+type Account = {
+  id: AccountId;
+  subdomain: AccountSubdomain;
+  organization: AccountOrganization | null;
+  contact_phone: AccountContactPhone | null;
+  notification_email: AccountNotificationEmail | null;
+  blocked: AccountBlocked;
+  created_at: AccountCreatedAt;
+  email: AccountEmail | null;
+  owner: AccountOwner;
+  country: AccountCountry;
+  city: AccountCity;
+  state: AccountState;
+};
+
 // DeliveryVariant
 type DeliveryVariantId = number;
 type DeliveryVariantTitle = string;
@@ -189,11 +230,24 @@ export class InSales {
   /**
    * Получить аккаунт.
    */
-  async getAccount() {
+  async getAccount(): Promise<ResultOK<Account> | ResultFAIL<Error>> {
     try {
       const { data } = await this.instance.get('/admin/account.json');
       return ResultOk(data);
     } catch (error) {
+      return ResultFail(error);
+    }
+  }
+
+  /**
+   * Получить заказ.
+   * @param {OrderId} id - идентификатор заказа.
+   */
+  async getOrder(id: OrderId){
+    try{
+      const {data} = await this.instance.get(`/admin/orders/${id}.json`);
+      return ResultOk(data);
+    }catch (error){
       return ResultFail(error);
     }
   }
