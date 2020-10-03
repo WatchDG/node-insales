@@ -243,11 +243,11 @@ export class InSales {
    * Получить заказ.
    * @param {OrderId} id - идентификатор заказа.
    */
-  async getOrder(id: OrderId){
-    try{
-      const {data} = await this.instance.get(`/admin/orders/${id}.json`);
+  async getOrder(id: OrderId) {
+    try {
+      const { data } = await this.instance.get(`/admin/orders/${id}.json`);
       return ResultOk(data);
-    }catch (error){
+    } catch (error) {
       return ResultFail(error);
     }
   }
