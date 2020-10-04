@@ -1,224 +1,5 @@
-import { Result, ResultOK, ResultFAIL, ResultFail, ResultOk } from 'node-result';
 import Axios, { AxiosInstance } from 'axios';
-
-// Domain
-type DomainId = number;
-
-// Order
-type OrderId = number;
-
-// Account
-type AccountId = number;
-type AccountSubdomain = string;
-type AccountOrganization = string;
-type AccountContactPhone = string;
-type AccountNotificationEmail = string;
-type AccountBlocked = boolean;
-type AccountCreatedAt = string;
-type AccountEmail = string;
-type AccountCountry = string;
-type AccountCity = string;
-type AccountState = string;
-
-type AccountOwnerId = number;
-type AccountOwnerName = string;
-type AccountOwnerEmail = string;
-type AccountOwnerCreatedAt = string;
-type AccountOwner = {
-  id: AccountOwnerId;
-  name: AccountOwnerName;
-  email: AccountOwnerEmail;
-  created_at: AccountOwnerCreatedAt;
-};
-type Account = {
-  id: AccountId;
-  subdomain: AccountSubdomain;
-  organization: AccountOrganization | null;
-  contact_phone: AccountContactPhone | null;
-  notification_email: AccountNotificationEmail | null;
-  blocked: AccountBlocked;
-  created_at: AccountCreatedAt;
-  email: AccountEmail | null;
-  owner: AccountOwner;
-  country: AccountCountry;
-  city: AccountCity;
-  state: AccountState;
-};
-
-// DeliveryVariant
-type DeliveryVariantId = number;
-type DeliveryVariantTitle = string;
-type DeliveryVariantType = 'DeliveryVariant::PickUp';
-type DeliveryVariantDescription = string;
-type DeliveryVariantPosition = number;
-type DeliveryVariantAddPaymentGateways = true;
-type DeliveryVariantUrl = string;
-type DeliveryVariantPickUpSourceAttributeId = number;
-type DeliveryVariantPickUpSourceAttributeDestroy = 1;
-type DeliveryVariantPickUpSourceRemoveAttribute = {
-  _destroy: DeliveryVariantPickUpSourceAttributeDestroy;
-  id: DeliveryVariantPickUpSourceAttributeId;
-};
-type DeliveryVariantPickUpSourceAttribute = DeliveryVariantPickUpSourceRemoveAttribute;
-type DeliveryVariantPaymentAttributeId = number;
-type DeliveryVariantPaymentAttributeDestroy = 1;
-type AddDeliveryVariantPaymentAttribute = {
-  payment_gateway_id: PaymentGatewayId;
-};
-type RemoveDeliveryVariantPaymentAttribute = {
-  _destroy: DeliveryVariantPaymentAttributeDestroy;
-  id: DeliveryVariantPaymentAttributeId;
-};
-type DeliveryVariantPaymentAttribute = AddDeliveryVariantPaymentAttribute | RemoveDeliveryVariantPaymentAttribute;
-type DeliveryVariant = {
-  title: DeliveryVariantTitle;
-  type: DeliveryVariantType;
-  description?: DeliveryVariantDescription;
-};
-type CreateDeliveryVariant = {
-  delivery_variant: {
-    title: DeliveryVariantTitle;
-    type: DeliveryVariantType;
-    description?: DeliveryVariantDescription;
-    position?: DeliveryVariantPosition;
-    add_payment_gateways?: DeliveryVariantAddPaymentGateways;
-    url?: DeliveryVariantUrl;
-  };
-};
-type UpdateDeliveryVariant = {
-  delivery_variant: {
-    title?: DeliveryVariantTitle;
-    description?: DeliveryVariantDescription;
-    position?: DeliveryVariantPosition;
-    add_payment_gateways?: DeliveryVariantAddPaymentGateways;
-    pick_up_source_delivery_variants_attributes?: DeliveryVariantPickUpSourceAttribute[];
-    payment_delivery_variants_attributes?: DeliveryVariantPaymentAttribute[];
-  };
-};
-
-// WebHook
-type WebHookId = number;
-type WebHookAddress = string;
-type WebHookTopic = 'orders/create' | 'orders/update';
-type WebHookFormatType = 'json' | 'xml';
-type WebHookCreatedAt = string;
-type WebHook = {
-  id: WebHookId;
-  address: WebHookAddress;
-  topic: WebHookTopic;
-  format_type: WebHookFormatType;
-  created_at: WebHookCreatedAt;
-};
-type CreateWebHook = {
-  webhook: {
-    address: WebHookAddress;
-    topic: WebHookTopic;
-    format_type: WebHookFormatType;
-  };
-};
-
-// Field
-type FieldId = number;
-type FieldType =
-  | 'Field::TextField'
-  | 'Field::TextArea'
-  | 'Field::Checkbox'
-  | 'Field::FileField'
-  | 'Field::Delivery'
-  | 'Field::PickPoint';
-type FieldOfficeTitle = string;
-type FieldDestiny = string;
-type CreateField = {
-  field: {
-    type: FieldType;
-    office_title: FieldOfficeTitle;
-    destiny: FieldDestiny;
-  };
-};
-
-// PickUpSource
-type PickUpSourceId = number;
-type PickUpSourceTitle = string;
-type PickUpSourceHttpMethod = 'GET' | 'POST';
-type PickUpSourceUrl = string;
-type PickUpSourcePointInfoUrl = string;
-type CreatePickUpSource = {
-  pick_up_source: {
-    title: PickUpSourceTitle;
-    http_method: PickUpSourceHttpMethod;
-    url: PickUpSourceUrl;
-    point_info_url: PickUpSourcePointInfoUrl;
-  };
-};
-type UpdatePickUpSource = {
-  pick_up_source: {
-    title: PickUpSourceTitle;
-    http_method: PickUpSourceHttpMethod;
-    url: PickUpSourceUrl;
-    point_info_url: PickUpSourcePointInfoUrl;
-  };
-};
-
-// PaymentGateway
-type PaymentGatewayId = number;
-type PaymentGatewayTitle = string;
-type PaymentGatewayDescription = string;
-type PaymentGatewayPosition = number;
-type PaymentGatewayType = 'PaymentGateway::Custom' | 'PaymentGateway::Cod';
-type PaymentGatewayCreatedAt = string;
-type PaymentGatewayUpdatedAt = string;
-type PaymentGatewayMargin = string;
-type PaymentGatewayDeliveryVariantId = number;
-type PaymentGatewayAddDeliveryVariants = boolean;
-type PaymentGatewayDeliveryVariant = {
-  id: PaymentGatewayDeliveryVariantId;
-  delivery_variant_id: DeliveryVariantId;
-  created_at: string;
-};
-type PaymentGatewayPaymentDeliveryVariantsAttributeId = number;
-type PaymentGatewayPaymentDeliveryVariantsAttributeDestroy = 1;
-type AddPaymentGatewayPaymentDeliveryVariantsAttribute = {
-  delivery_variant_id: DeliveryVariantId;
-};
-type RemovePaymentGatewayPaymentDeliveryVariantsAttribute = {
-  _destroy: PaymentGatewayPaymentDeliveryVariantsAttributeDestroy;
-  id: PaymentGatewayPaymentDeliveryVariantsAttributeId;
-};
-type PaymentGatewayPaymentDeliveryVariantsAttribute =
-  | AddPaymentGatewayPaymentDeliveryVariantsAttribute
-  | RemovePaymentGatewayPaymentDeliveryVariantsAttribute;
-type PaymentGateway = {
-  id: PaymentGatewayId;
-  position: PaymentGatewayPosition;
-  type: PaymentGatewayType;
-  created_at: PaymentGatewayCreatedAt;
-  updated_at: PaymentGatewayUpdatedAt;
-  margin: PaymentGatewayMargin;
-  available_for_individual_clients: boolean;
-  available_for_juridical_clients: boolean;
-  title: PaymentGatewayTitle;
-  description: PaymentGatewayDescription;
-  payment_delivery_variants: PaymentGatewayDeliveryVariant[];
-};
-type CreatePaymentGateway = {
-  payment_gateway: {
-    title: PaymentGatewayTitle;
-    type: PaymentGatewayType;
-    margin?: PaymentGatewayMargin;
-    position?: PaymentGatewayPosition;
-    description?: PaymentGatewayDescription;
-    add_delivery_variants?: PaymentGatewayAddDeliveryVariants;
-  };
-};
-type UpdatePaymentGateway = {
-  payment_gateway: {
-    title?: PaymentGatewayTitle;
-    margin?: PaymentGatewayMargin;
-    position?: PaymentGatewayPosition;
-    description?: PaymentGatewayDescription;
-    payment_delivery_variants_attributes?: PaymentGatewayPaymentDeliveryVariantsAttribute[];
-  };
-};
+import { ResultOK, ResultFAIL, ResultFail, ResultOk } from 'node-result';
 
 /**
  * InSales
@@ -232,6 +13,7 @@ export class InSales {
 
   /**
    * Получить аккаунт.
+   * @return Promise<ResultOK<Account> | ResultFAIL<Error>>
    */
   async getAccount(): Promise<ResultOK<Account> | ResultFAIL<Error>> {
     try {
@@ -353,7 +135,7 @@ export class InSales {
    * @param {PaymentGatewayId} paymentGatewayId - идентификатор платежного шлюза
    * @return AddDeliveryVariantPaymentAttribute
    */
-  createAddDeliveryVariantPaymentAttribute(paymentGatewayId: PaymentGatewayId) {
+  createAddDeliveryVariantPaymentAttribute(paymentGatewayId: PaymentGatewayId): AddDeliveryVariantPaymentAttribute {
     return {
       payment_gateway_id: paymentGatewayId,
     };
@@ -439,7 +221,7 @@ export class InSales {
   /**
    * Получить все веб хуки.
    */
-  async getWebHooks(): Promise<Result<null, WebHook[]> | Result<Error, void>> {
+  async getWebHooks(): Promise<ResultOK<WebHook[]> | ResultFAIL<Error>> {
     try {
       const { data } = await this.instance.get('/admin/webhooks.json');
       return ResultOk(data);
@@ -452,7 +234,7 @@ export class InSales {
    * Получить веб хук.
    * @param {WebHookId} id - идентификатор веб хука
    */
-  async getWebHook(id: WebHookId): Promise<Result<null, WebHook> | Result<Error, void>> {
+  async getWebHook(id: WebHookId): Promise<ResultOK<WebHook> | ResultFAIL<Error>> {
     try {
       const { data } = await this.instance.get(`/admin/webhooks/${id}.json`);
       return ResultOk(data);
@@ -465,7 +247,7 @@ export class InSales {
    * Создать веб хук.
    * @param {CreateWebHook} payload - объект создания веб хука
    */
-  async createWebHook(payload: CreateWebHook): Promise<Result<null, WebHook> | Result<Error, void>> {
+  async createWebHook(payload: CreateWebHook): Promise<ResultOK<WebHook> | ResultFAIL<Error>> {
     try {
       const { data } = await this.instance.post(`/admin/webhooks.json`, payload);
       return ResultOk(data);
