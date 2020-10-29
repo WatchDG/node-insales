@@ -11,7 +11,12 @@ type DeliveryVariantPickUpSourceRemoveAttribute = {
   _destroy: DeliveryVariantPickUpSourceAttributeDestroy;
   id: DeliveryVariantPickUpSourceAttributeId;
 };
-type DeliveryVariantPickUpSourceAttribute = DeliveryVariantPickUpSourceRemoveAttribute;
+type DeliveryVariantPickUpSourceAddAttribute = {
+  pick_up_source_id: PickUpSourceId;
+};
+type DeliveryVariantPickUpSourceAttribute =
+  | DeliveryVariantPickUpSourceRemoveAttribute
+  | DeliveryVariantPickUpSourceAddAttribute;
 type DeliveryVariantPaymentAttributeId = number;
 type DeliveryVariantPaymentAttributeDestroy = 1;
 type AddDeliveryVariantPaymentAttribute = {

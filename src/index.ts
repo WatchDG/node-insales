@@ -271,8 +271,9 @@ export class InSales {
 
   /**
    * Получить все источники пунктов выдачи.
+   * @return Promise<ResultOK<PickUpSource[]> | ResultFAIL<Error>>
    */
-  async getPickUpSources() {
+  async getPickUpSources(): Promise<ResultOK<PickUpSource[]> | ResultFAIL<Error>> {
     try {
       const { data } = await this.instance.get('/admin/pick_up_sources.json');
       return ResultOk(data);
@@ -284,8 +285,9 @@ export class InSales {
   /**
    * Получить источник пунктов выдачи.
    * @param {PickUpSourceId} id - идентификатор источника пунктов выдачи
+   * @return Promise<ResultOK<PickUpSource> | ResultFAIL<Error>>
    */
-  async getPickUpSource(id: PickUpSourceId) {
+  async getPickUpSource(id: PickUpSourceId): Promise<ResultOK<PickUpSource> | ResultFAIL<Error>> {
     try {
       const { data } = await this.instance.get(`/admin/pick_up_sources/${id}.json`);
       return ResultOk(data);
@@ -297,8 +299,9 @@ export class InSales {
   /**
    * Создать источник пунктов выдачи.
    * @param {CreatePickUpSource} payload - объект создания источника пунктов выдачи
+   * @return Promise<ResultOK<PickUpSource> | ResultFAIL<Error>>
    */
-  async createPickUpSource(payload: CreatePickUpSource) {
+  async createPickUpSource(payload: CreatePickUpSource): Promise<ResultOK<PickUpSource> | ResultFAIL<Error>> {
     try {
       const { data } = await this.instance.post('/admin/pick_up_sources.json', payload);
       return ResultOk(data);
@@ -311,8 +314,12 @@ export class InSales {
    * Обновить источник пунктов выдачи.
    * @param {PickUpSourceId} id - идентификатор источника пунктов выдачи
    * @param {UpdatePickUpSource} payload - объект обновлления источника пунктов выдачи
+   * @return Promise<ResultOK<PickUpSource> | ResultFAIL<Error>>
    */
-  async updatePickUpSource(id: PickUpSourceId, payload: UpdatePickUpSource) {
+  async updatePickUpSource(
+    id: PickUpSourceId,
+    payload: UpdatePickUpSource,
+  ): Promise<ResultOK<PickUpSource> | ResultFAIL<Error>> {
     try {
       const { data } = await this.instance.put(`/admin/pick_up_sources/${id}.json`, payload);
       return ResultOk(data);
@@ -392,6 +399,33 @@ export class InSales {
     try {
       const deliveryVariantPickUpSourceAttributes = deliveryVariantPickUpSourceAttributeIds.map(
         this.createRemoveDeliveryVariantPickUpSourceAttribute,
+      );
+      const payload = {
+        delivery_variant: {
+          pick_up_source_delivery_variants_attributes: deliveryVariantPickUpSourceAttributes,
+        },
+      };
+      return this.updateDeliveryVariant(deliveryVariantId, payload);
+    } catch (error) {
+      return ResultFail(error);
+    }
+  }
+
+  createAddDeliveryVariantPickUpSourceAttribute(
+    pickUpSourceId: PickUpSourceId,
+  ): DeliveryVariantPickUpSourceAddAttribute {
+    return {
+      pick_up_source_id: pickUpSourceId,
+    };
+  }
+
+  async addPickUpSourcesToDeliveryVariant(
+    deliveryVariantId: DeliveryVariantId,
+    deliveryVariantPickUpSourceAttributeIds: DeliveryVariantPickUpSourceAttributeId[],
+  ) {
+    try {
+      const deliveryVariantPickUpSourceAttributes = deliveryVariantPickUpSourceAttributeIds.map(
+        this.createAddDeliveryVariantPickUpSourceAttribute,
       );
       const payload = {
         delivery_variant: {
