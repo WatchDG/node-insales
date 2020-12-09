@@ -257,6 +257,20 @@ export class InSales {
   }
 
   /**
+   * Обновить веб хук
+   * @param id -
+   * @param payload -
+   */
+  async updateWebHook(id: WebHookId, payload: UpdateWebHook) {
+    try {
+      const { data } = await this.instance.put(`/admin/webhooks/${id}.json`, payload);
+      return ResultOk(data);
+    } catch (error) {
+      return ResultFail(error);
+    }
+  }
+
+  /**
    * Удалить веб хук.
    * @param {WebHookId} id - идентификатор веб хука
    */

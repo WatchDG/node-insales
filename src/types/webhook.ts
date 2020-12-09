@@ -17,3 +17,11 @@ type CreateWebHook = {
     format_type: WebHookFormatType;
   };
 };
+
+type UpdateWebHook = {
+  webhook: {
+    address?: WebHookAddress;
+    topic?: WebHookTopic;
+    format_type?: WebHookFormatType;
+  };
+};
