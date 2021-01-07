@@ -1,5 +1,5 @@
 import Axios, { AxiosInstance } from 'axios';
-import { ResultOK, ResultFAIL, ResultFail, ResultOk } from 'node-result';
+import { ResultOK, ResultFAIL, ResultFail, ResultOk, tryCatchWrapperAsync } from 'node-result';
 
 /**
  * InSales
@@ -12,95 +12,74 @@ export class InSales {
   }
 
   /**
-   * Получить аккаунт.
+   * get account data
    * @return Promise<ResultOK<Account> | ResultFAIL<Error>>
    */
+  @tryCatchWrapperAsync
   async getAccount(): Promise<ResultOK<Account> | ResultFAIL<Error>> {
-    try {
-      const { data } = await this.instance.get('/admin/account.json');
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.get('/admin/account.json');
+    return ResultOk(data);
   }
 
   /**
-   * Получить заказ.
-   * @param {OrderId} id - идентификатор заказа.
+   * get order data by order id
+   * @param {OrderId} id - order id
    */
+  @tryCatchWrapperAsync
   async getOrder(id: OrderId) {
-    try {
-      const { data } = await this.instance.get(`/admin/orders/${id}.json`);
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.get(`/admin/orders/${id}.json`);
+    return ResultOk(data);
   }
 
   /**
-   * Получить все домены.
+   * get all domains
    */
+  @tryCatchWrapperAsync
   async getDomains() {
-    try {
-      const { data } = await this.instance.get(`/admin/domains.json`);
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.get(`/admin/domains.json`);
+    return ResultOk(data);
   }
 
   /**
-   * Получить домен.
-   * @param {DomainId} id - идентификатор домена.
+   * get domain by domain id
+   * @param {DomainId} id - domain id
    */
+  @tryCatchWrapperAsync
   async getDomain(id: DomainId) {
-    try {
-      const { data } = await this.instance.get(`/admin/domains/${id}.json`);
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.get(`/admin/domains/${id}.json`);
+    return ResultOk(data);
   }
 
   /**
-   * Получить все варианты доставки.
+   * get all delivery variants
    * @return Promise<ResultOK<DeliveryVariant[]> | ResultFAIL<Error>>
    */
+  @tryCatchWrapperAsync
   async getDeliveryVariants(): Promise<ResultOK<DeliveryVariant[]> | ResultFAIL<Error>> {
-    try {
-      const { data } = await this.instance.get('/admin/delivery_variants.json');
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.get('/admin/delivery_variants.json');
+    return ResultOk(data);
   }
 
   /**
-   * Получить вариант доставки.
-   * @param {DeliveryVariantId} id - идентификатор варианта доставки
+   * get delivery variant by delivery variant id
+   * @param {DeliveryVariantId} id - delivery variant id
    * @return Promise<ResultOK<DeliveryVariant> | ResultFAIL<Error>>
    */
+  @tryCatchWrapperAsync
   async getDeliveryVariant(id: DeliveryVariantId): Promise<ResultOK<DeliveryVariant> | ResultFAIL<Error>> {
-    try {
-      const { data } = await this.instance.get(`/admin/delivery_variants/${id}.json`);
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.get(`/admin/delivery_variants/${id}.json`);
+    return ResultOk(data);
   }
 
   /**
-   * Создать вариант доставки.
-   * @param {CreateDeliveryVariant} payload - объект создания варианта доставки
+   * create delivery variant
+   * @param {CreateDeliveryVariant} payload - delivery valiant create object
    * @return Promise<ResultOK<DeliveryVariant> | ResultFAIL<Error>>
    */
+  @tryCatchWrapperAsync
   async createDeliveryVariant(payload: CreateDeliveryVariant): Promise<ResultOK<DeliveryVariant> | ResultFAIL<Error>> {
-    try {
-      const { data } = await this.instance.post('/admin/delivery_variants.json', payload);
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.post('/admin/delivery_variants.json', payload);
+    return ResultOk(data);
   }
 
   /**
@@ -108,26 +87,20 @@ export class InSales {
    * @param {DeliveryVariantId} id - идентификатор варианта доставки
    * @param {UpdateDeliveryVariant} payload - объект обновления варианта доставки
    */
+  @tryCatchWrapperAsync
   async updateDeliveryVariant(id: DeliveryVariantId, payload: UpdateDeliveryVariant) {
-    try {
-      const { data } = await this.instance.put(`/admin/delivery_variants/${id}.json`, payload);
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.put(`/admin/delivery_variants/${id}.json`, payload);
+    return ResultOk(data);
   }
 
   /**
    * Удалить вариант доставки.
    * @param {DeliveryVariantId} id - идентификатор варианта доставки
    */
+  @tryCatchWrapperAsync
   async destroyDeliveryVariant(id: DeliveryVariantId) {
-    try {
-      const { data } = await this.instance.delete(`/admin/delivery_variants/${id}.json`);
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.delete(`/admin/delivery_variants/${id}.json`);
+    return ResultOk(data);
   }
 
   /**
@@ -155,13 +128,10 @@ export class InSales {
    * Получить все платежные шлюзы.
    * @return Promise<ResultOK<PaymentGateway[]> | ResultFAIL<Error>>
    */
+  @tryCatchWrapperAsync
   async getPaymentGateways(): Promise<ResultOK<PaymentGateway[]> | ResultFAIL<Error>> {
-    try {
-      const { data } = await this.instance.get('/admin/payment_gateways.json');
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.get('/admin/payment_gateways.json');
+    return ResultOk(data);
   }
 
   /**
@@ -169,26 +139,20 @@ export class InSales {
    * @param {PaymentGatewayId} id - идентификатор платежного шлюза
    * @return Promise<ResultOK<PaymentGateway> | ResultFAIL<Error>>
    */
+  @tryCatchWrapperAsync
   async getPaymentGateway(id: PaymentGatewayId): Promise<ResultOK<PaymentGateway> | ResultFAIL<Error>> {
-    try {
-      const { data } = await this.instance.get(`/admin/payment_gateways/${id}.json`);
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.get(`/admin/payment_gateways/${id}.json`);
+    return ResultOk(data);
   }
 
   /**
    * Создать платежный шлюз.
    * @param {createPaymentGateway} payload - объект создания платежного шлюза
    */
+  @tryCatchWrapperAsync
   async createPaymentGateway(payload: CreatePaymentGateway) {
-    try {
-      const { data } = await this.instance.post('/admin/payment_gateways.json', payload);
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.post('/admin/payment_gateways.json', payload);
+    return ResultOk(data);
   }
 
   /**
@@ -196,64 +160,49 @@ export class InSales {
    * @param {PaymentGatewayId} id - идентификатор платежного шлюза
    * @param {UpdatePaymentGateway} payload - объект обновления платежного шлюза
    */
+  @tryCatchWrapperAsync
   async updatePaymentGateway(id: PaymentGatewayId, payload: UpdatePaymentGateway) {
-    try {
-      const { data } = await this.instance.put(`/admin/payment_gateways/${id}.json`, payload);
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.put(`/admin/payment_gateways/${id}.json`, payload);
+    return ResultOk(data);
   }
 
   /**
    * Удалить платежный шлюз.
    * @param {PaymentGatewayId} id - идентификатор платежного шлюза
    */
+  @tryCatchWrapperAsync
   async destroyPaymentGateway(id: PaymentGatewayId) {
-    try {
-      const { data } = await this.instance.delete(`/admin/payment_gateways/${id}.json`);
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.delete(`/admin/payment_gateways/${id}.json`);
+    return ResultOk(data);
   }
 
   /**
    * Получить все веб хуки.
    */
+  @tryCatchWrapperAsync
   async getWebHooks(): Promise<ResultOK<WebHook[]> | ResultFAIL<Error>> {
-    try {
-      const { data } = await this.instance.get('/admin/webhooks.json');
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.get('/admin/webhooks.json');
+    return ResultOk(data);
   }
 
   /**
    * Получить веб хук.
    * @param {WebHookId} id - идентификатор веб хука
    */
+  @tryCatchWrapperAsync
   async getWebHook(id: WebHookId): Promise<ResultOK<WebHook> | ResultFAIL<Error>> {
-    try {
-      const { data } = await this.instance.get(`/admin/webhooks/${id}.json`);
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.get(`/admin/webhooks/${id}.json`);
+    return ResultOk(data);
   }
 
   /**
    * Создать веб хук.
    * @param {CreateWebHook} payload - объект создания веб хука
    */
+  @tryCatchWrapperAsync
   async createWebHook(payload: CreateWebHook): Promise<ResultOK<WebHook> | ResultFAIL<Error>> {
-    try {
-      const { data } = await this.instance.post(`/admin/webhooks.json`, payload);
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.post(`/admin/webhooks.json`, payload);
+    return ResultOk(data);
   }
 
   /**
@@ -261,39 +210,30 @@ export class InSales {
    * @param id -
    * @param payload -
    */
+  @tryCatchWrapperAsync
   async updateWebHook(id: WebHookId, payload: UpdateWebHook) {
-    try {
-      const { data } = await this.instance.put(`/admin/webhooks/${id}.json`, payload);
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.put(`/admin/webhooks/${id}.json`, payload);
+    return ResultOk(data);
   }
 
   /**
    * Удалить веб хук.
    * @param {WebHookId} id - идентификатор веб хука
    */
+  @tryCatchWrapperAsync
   async destroyWebHook(id: WebHookId) {
-    try {
-      const { data } = await this.instance.delete(`/admin/webhooks/${id}.json`);
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.delete(`/admin/webhooks/${id}.json`);
+    return ResultOk(data);
   }
 
   /**
    * Получить все источники пунктов выдачи.
    * @return Promise<ResultOK<PickUpSource[]> | ResultFAIL<Error>>
    */
+  @tryCatchWrapperAsync
   async getPickUpSources(): Promise<ResultOK<PickUpSource[]> | ResultFAIL<Error>> {
-    try {
-      const { data } = await this.instance.get('/admin/pick_up_sources.json');
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.get('/admin/pick_up_sources.json');
+    return ResultOk(data);
   }
 
   /**
@@ -301,13 +241,10 @@ export class InSales {
    * @param {PickUpSourceId} id - идентификатор источника пунктов выдачи
    * @return Promise<ResultOK<PickUpSource> | ResultFAIL<Error>>
    */
+  @tryCatchWrapperAsync
   async getPickUpSource(id: PickUpSourceId): Promise<ResultOK<PickUpSource> | ResultFAIL<Error>> {
-    try {
-      const { data } = await this.instance.get(`/admin/pick_up_sources/${id}.json`);
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.get(`/admin/pick_up_sources/${id}.json`);
+    return ResultOk(data);
   }
 
   /**
@@ -315,13 +252,10 @@ export class InSales {
    * @param {CreatePickUpSource} payload - объект создания источника пунктов выдачи
    * @return Promise<ResultOK<PickUpSource> | ResultFAIL<Error>>
    */
+  @tryCatchWrapperAsync
   async createPickUpSource(payload: CreatePickUpSource): Promise<ResultOK<PickUpSource> | ResultFAIL<Error>> {
-    try {
-      const { data } = await this.instance.post('/admin/pick_up_sources.json', payload);
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.post('/admin/pick_up_sources.json', payload);
+    return ResultOk(data);
   }
 
   /**
@@ -330,99 +264,78 @@ export class InSales {
    * @param {UpdatePickUpSource} payload - объект обновлления источника пунктов выдачи
    * @return Promise<ResultOK<PickUpSource> | ResultFAIL<Error>>
    */
+  @tryCatchWrapperAsync
   async updatePickUpSource(
     id: PickUpSourceId,
     payload: UpdatePickUpSource,
   ): Promise<ResultOK<PickUpSource> | ResultFAIL<Error>> {
-    try {
-      const { data } = await this.instance.put(`/admin/pick_up_sources/${id}.json`, payload);
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.put(`/admin/pick_up_sources/${id}.json`, payload);
+    return ResultOk(data);
   }
 
   /**
    * Удалить источник пунктов выдачи.
    * @param {PickUpSourceId} id - идентификатор источника пунктов выдачи
    */
+  @tryCatchWrapperAsync
   async destroyPickUpSource(id: PickUpSourceId) {
-    try {
-      const { data } = await this.instance.delete(`/admin/pick_up_sources/${id}.json`);
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.delete(`/admin/pick_up_sources/${id}.json`);
+    return ResultOk(data);
   }
 
   /**
    * Получить все поля.
    */
+  @tryCatchWrapperAsync
   async getFields() {
-    try {
-      const { data } = await this.instance.get('/admin/fields.json');
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.get('/admin/fields.json');
+    return ResultOk(data);
   }
 
   /**
    * Получить поле.
    * @param {FieldId} id - идентификатор поля
    */
+  @tryCatchWrapperAsync
   async getField(id: FieldId) {
-    try {
-      const { data } = await this.instance.get(`/admin/fields/${id}.json`);
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.get(`/admin/fields/${id}.json`);
+    return ResultOk(data);
   }
 
   /**
    * Создать поле.
    * @param {CreateField} payload - объект создания поля
    */
+  @tryCatchWrapperAsync
   async createField(payload: CreateField) {
-    try {
-      const { data } = await this.instance.post('/admin/fields.json', payload);
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.post('/admin/fields.json', payload);
+    return ResultOk(data);
   }
 
   /**
    * Удалить поле.
    * @param {FieldId} id - идентификатор поля
    */
+  @tryCatchWrapperAsync
   async destroyField(id: FieldId) {
-    try {
-      const { data } = await this.instance.delete(`/admin/fields/${id}.json`);
-      return ResultOk(data);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const { data } = await this.instance.delete(`/admin/fields/${id}.json`);
+    return ResultOk(data);
   }
 
+  @tryCatchWrapperAsync
   async removePickUpSourcesFromDeliveryVariant(
     deliveryVariantId: DeliveryVariantId,
     deliveryVariantPickUpSourceAttributeIds: DeliveryVariantPickUpSourceAttributeId[],
   ) {
-    try {
-      const deliveryVariantPickUpSourceAttributes = deliveryVariantPickUpSourceAttributeIds.map(
-        this.createRemoveDeliveryVariantPickUpSourceAttribute,
-      );
-      const payload = {
-        delivery_variant: {
-          pick_up_source_delivery_variants_attributes: deliveryVariantPickUpSourceAttributes,
-        },
-      };
-      return this.updateDeliveryVariant(deliveryVariantId, payload);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const deliveryVariantPickUpSourceAttributes = deliveryVariantPickUpSourceAttributeIds.map(
+      this.createRemoveDeliveryVariantPickUpSourceAttribute,
+    );
+    const payload = {
+      delivery_variant: {
+        pick_up_source_delivery_variants_attributes: deliveryVariantPickUpSourceAttributes,
+      },
+    };
+    return this.updateDeliveryVariant(deliveryVariantId, payload);
   }
 
   createAddDeliveryVariantPickUpSourceAttribute(
@@ -433,41 +346,35 @@ export class InSales {
     };
   }
 
+  @tryCatchWrapperAsync
   async addPickUpSourcesToDeliveryVariant(
     deliveryVariantId: DeliveryVariantId,
     deliveryVariantPickUpSourceAttributeIds: DeliveryVariantPickUpSourceAttributeId[],
   ) {
-    try {
-      const deliveryVariantPickUpSourceAttributes = deliveryVariantPickUpSourceAttributeIds.map(
-        this.createAddDeliveryVariantPickUpSourceAttribute,
-      );
-      const payload = {
-        delivery_variant: {
-          pick_up_source_delivery_variants_attributes: deliveryVariantPickUpSourceAttributes,
-        },
-      };
-      return this.updateDeliveryVariant(deliveryVariantId, payload);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const deliveryVariantPickUpSourceAttributes = deliveryVariantPickUpSourceAttributeIds.map(
+      this.createAddDeliveryVariantPickUpSourceAttribute,
+    );
+    const payload = {
+      delivery_variant: {
+        pick_up_source_delivery_variants_attributes: deliveryVariantPickUpSourceAttributes,
+      },
+    };
+    return this.updateDeliveryVariant(deliveryVariantId, payload);
   }
 
+  @tryCatchWrapperAsync
   async addPaymentsToDeliveryVariant(
     deliveryVariantId: DeliveryVariantId,
     deliveryVariantPaymentAttributeIds: PaymentGatewayId[],
   ) {
-    try {
-      const deliveryVariantPaymentAttributes = deliveryVariantPaymentAttributeIds.map(
-        this.createAddDeliveryVariantPaymentAttribute,
-      );
-      const payload = {
-        delivery_variant: {
-          payment_delivery_variants_attributes: deliveryVariantPaymentAttributes,
-        },
-      };
-      return this.updateDeliveryVariant(deliveryVariantId, payload);
-    } catch (error) {
-      return ResultFail(error);
-    }
+    const deliveryVariantPaymentAttributes = deliveryVariantPaymentAttributeIds.map(
+      this.createAddDeliveryVariantPaymentAttribute,
+    );
+    const payload = {
+      delivery_variant: {
+        payment_delivery_variants_attributes: deliveryVariantPaymentAttributes,
+      },
+    };
+    return this.updateDeliveryVariant(deliveryVariantId, payload);
   }
 }

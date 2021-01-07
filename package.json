@@ -20,21 +20,17 @@
     "preversion": "npm run build",
     "version": "npm run build",
     "prepublishOnly": "npm run build",
-    "prepare": "npm run build",
-    "jsdoc": "npm run build && npx jsdoc -d jsdoc lib\\index.js",
-    "readme": "npm run build && npx jsdoc2md lib\\index.js > README.md"
+    "prepare": "npm run build"
   },
   "files": [
     "lib/**/*"
   ],
   "dependencies": {
     "axios": "^0.21.1",
-    "node-result": "^5.2.0"
+    "node-result": "^5.5.0"
   },
   "devDependencies": {
     "@types/node": "^14.0.23",
-    "jsdoc": "^3.6.5",
-    "jsdoc-to-markdown": "^6.0.1",
     "tslint": "^6.1.2",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.9.5"
