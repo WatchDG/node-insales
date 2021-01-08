@@ -1,5 +1,5 @@
 import Axios, { AxiosInstance } from 'axios';
-import { ResultOK, ResultFAIL, ResultFail, ResultOk, tryCatchWrapperAsync } from 'node-result';
+import { ResultOK, ResultFAIL, ResultOk, tryCatchWrapperAsync } from 'node-result';
 
 /**
  * InSales
@@ -7,7 +7,7 @@ import { ResultOK, ResultFAIL, ResultFail, ResultOk, tryCatchWrapperAsync } from
 export class InSales {
   private readonly instance: AxiosInstance;
 
-  constructor(baseURL: string, timeout: number = 1000, headers: object = {}) {
+  constructor(baseURL: string, timeout = 1000, headers: Record<string, string> = {}) {
     this.instance = Axios.create({ baseURL, timeout, headers });
   }
 
@@ -110,7 +110,7 @@ export class InSales {
    */
   createAddDeliveryVariantPaymentAttribute(paymentGatewayId: PaymentGatewayId): AddDeliveryVariantPaymentAttribute {
     return {
-      payment_gateway_id: paymentGatewayId,
+      payment_gateway_id: paymentGatewayId
     };
   }
 
@@ -119,7 +119,7 @@ export class InSales {
    * @param {DeliveryVariantPickUpSourceAttributeId} deliveryVariantPickUpSourceAttributeId - идентификатор атрибута источника точки
    */
   createRemoveDeliveryVariantPickUpSourceAttribute(
-    deliveryVariantPickUpSourceAttributeId: DeliveryVariantPickUpSourceAttributeId,
+    deliveryVariantPickUpSourceAttributeId: DeliveryVariantPickUpSourceAttributeId
   ): DeliveryVariantPickUpSourceRemoveAttribute {
     return { _destroy: 1, id: deliveryVariantPickUpSourceAttributeId };
   }
@@ -267,7 +267,7 @@ export class InSales {
   @tryCatchWrapperAsync
   async updatePickUpSource(
     id: PickUpSourceId,
-    payload: UpdatePickUpSource,
+    payload: UpdatePickUpSource
   ): Promise<ResultOK<PickUpSource> | ResultFAIL<Error>> {
     const { data } = await this.instance.put(`/admin/pick_up_sources/${id}.json`, payload);
     return ResultOk(data);
@@ -325,39 +325,39 @@ export class InSales {
   @tryCatchWrapperAsync
   async removePickUpSourcesFromDeliveryVariant(
     deliveryVariantId: DeliveryVariantId,
-    deliveryVariantPickUpSourceAttributeIds: DeliveryVariantPickUpSourceAttributeId[],
+    deliveryVariantPickUpSourceAttributeIds: DeliveryVariantPickUpSourceAttributeId[]
   ) {
     const deliveryVariantPickUpSourceAttributes = deliveryVariantPickUpSourceAttributeIds.map(
-      this.createRemoveDeliveryVariantPickUpSourceAttribute,
+      this.createRemoveDeliveryVariantPickUpSourceAttribute
     );
     const payload = {
       delivery_variant: {
-        pick_up_source_delivery_variants_attributes: deliveryVariantPickUpSourceAttributes,
-      },
+        pick_up_source_delivery_variants_attributes: deliveryVariantPickUpSourceAttributes
+      }
     };
     return this.updateDeliveryVariant(deliveryVariantId, payload);
   }
 
   createAddDeliveryVariantPickUpSourceAttribute(
-    pickUpSourceId: PickUpSourceId,
+    pickUpSourceId: PickUpSourceId
   ): DeliveryVariantPickUpSourceAddAttribute {
     return {
-      pick_up_source_id: pickUpSourceId,
+      pick_up_source_id: pickUpSourceId
     };
   }
 
   @tryCatchWrapperAsync
   async addPickUpSourcesToDeliveryVariant(
     deliveryVariantId: DeliveryVariantId,
-    deliveryVariantPickUpSourceAttributeIds: DeliveryVariantPickUpSourceAttributeId[],
+    deliveryVariantPickUpSourceAttributeIds: DeliveryVariantPickUpSourceAttributeId[]
   ) {
     const deliveryVariantPickUpSourceAttributes = deliveryVariantPickUpSourceAttributeIds.map(
-      this.createAddDeliveryVariantPickUpSourceAttribute,
+      this.createAddDeliveryVariantPickUpSourceAttribute
     );
     const payload = {
       delivery_variant: {
-        pick_up_source_delivery_variants_attributes: deliveryVariantPickUpSourceAttributes,
-      },
+        pick_up_source_delivery_variants_attributes: deliveryVariantPickUpSourceAttributes
+      }
     };
     return this.updateDeliveryVariant(deliveryVariantId, payload);
   }
@@ -365,15 +365,15 @@ export class InSales {
   @tryCatchWrapperAsync
   async addPaymentsToDeliveryVariant(
     deliveryVariantId: DeliveryVariantId,
-    deliveryVariantPaymentAttributeIds: PaymentGatewayId[],
+    deliveryVariantPaymentAttributeIds: PaymentGatewayId[]
   ) {
     const deliveryVariantPaymentAttributes = deliveryVariantPaymentAttributeIds.map(
-      this.createAddDeliveryVariantPaymentAttribute,
+      this.createAddDeliveryVariantPaymentAttribute
     );
     const payload = {
       delivery_variant: {
-        payment_delivery_variants_attributes: deliveryVariantPaymentAttributes,
-      },
+        payment_delivery_variants_attributes: deliveryVariantPaymentAttributes
+      }
     };
     return this.updateDeliveryVariant(deliveryVariantId, payload);
   }
