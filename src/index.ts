@@ -1,5 +1,6 @@
 import Axios, { AxiosInstance } from 'axios';
-import { ResultOK, ResultFAIL, ResultOk, tryCatchWrapperAsync } from 'node-result';
+import { ResultOK, ResultFAIL, ResultOk, tryCatchWrapperAsync, ReturningResultAsync } from 'node-result';
+import { CreateJsTag, JsTag, JsTagId } from './types/js_tag';
 
 /**
  * InSales
@@ -376,5 +377,32 @@ export class InSales {
       }
     };
     return this.updateDeliveryVariant(deliveryVariantId, payload);
+  }
+
+  @tryCatchWrapperAsync
+  async getJsTags(): ReturningResultAsync<JsTag[], Error> {
+    const { data } = await this.instance.get(`/admin/js_tags.json`);
+    return ResultOk(data);
+  }
+
+  @tryCatchWrapperAsync
+  async getJsTag(jsTagId: JsTagId): ReturningResultAsync<JsTag, Error> {
+    const { data } = await this.instance.get(`/admin/js_tags/${jsTagId}.json`);
+    return ResultOk(data);
+  }
+
+  @tryCatchWrapperAsync
+  async createJsTag(createJsTag: CreateJsTag): ReturningResultAsync<JsTag, Error> {
+    const payload = {
+      js_tag: createJsTag
+    };
+    const { data } = await this.instance.post('/admin/js_tags.json', payload);
+    return ResultOk(data);
+  }
+
+  @tryCatchWrapperAsync
+  async destroyJsTag(jsTagId: JsTagId): ReturningResultAsync<null, Error> {
+    await this.instance.delete(`/admin/js_tags/${jsTagId}.json`);
+    return ResultOk(null);
   }
 }
