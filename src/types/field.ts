@@ -1,4 +1,4 @@
-type FieldId = number;
+export type FieldId = number;
 type FieldType =
   | 'Field::TextField'
   | 'Field::TextArea'
@@ -8,7 +8,7 @@ type FieldType =
   | 'Field::PickPoint';
 type FieldOfficeTitle = string;
 type FieldDestiny = string;
-type CreateField = {
+export type CreateField = {
   field: {
     type: FieldType;
     office_title: FieldOfficeTitle;

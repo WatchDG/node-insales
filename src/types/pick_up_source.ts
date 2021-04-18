@@ -1,4 +1,4 @@
-type PickUpSourceId = number;
+export type PickUpSourceId = number;
 type PickUpSourceTitle = string;
 type PickUpSourceHttpMethod = 'GET' | 'POST';
 type PickUpSourceUrl = string;
@@ -6,7 +6,7 @@ type PickUpSourcePointInfoUrl = string;
 type PickUpSourcePointCreatedAt = string;
 type PickUpSourcePointUpdatedAt = string;
 
-type CreatePickUpSource = {
+export type CreatePickUpSource = {
   pick_up_source: {
     title: PickUpSourceTitle;
     http_method: PickUpSourceHttpMethod;
@@ -14,7 +14,7 @@ type CreatePickUpSource = {
     point_info_url: PickUpSourcePointInfoUrl;
   };
 };
-type UpdatePickUpSource = {
+export type UpdatePickUpSource = {
   pick_up_source: {
     title: PickUpSourceTitle;
     http_method: PickUpSourceHttpMethod;
@@ -23,7 +23,7 @@ type UpdatePickUpSource = {
   };
 };
 
-type PickUpSource = {
+export type PickUpSource = {
   id: PickUpSourceId;
   title: PickUpSourceTitle;
   url: PickUpSourceUrl;

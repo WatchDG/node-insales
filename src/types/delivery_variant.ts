@@ -1,17 +1,20 @@
-type DeliveryVariantId = number;
+import type { PickUpSourceId } from './pick_up_source';
+import type { PaymentGatewayId } from './payment_gateway';
+
+export type DeliveryVariantId = number;
 type DeliveryVariantTitle = string;
 type DeliveryVariantType = 'DeliveryVariant::PickUp';
 type DeliveryVariantDescription = string;
 type DeliveryVariantPosition = number;
 type DeliveryVariantAddPaymentGateways = true;
 type DeliveryVariantUrl = string;
-type DeliveryVariantPickUpSourceAttributeId = number;
+export type DeliveryVariantPickUpSourceAttributeId = number;
 type DeliveryVariantPickUpSourceAttributeDestroy = 1;
-type DeliveryVariantPickUpSourceRemoveAttribute = {
+export type DeliveryVariantPickUpSourceRemoveAttribute = {
   _destroy: DeliveryVariantPickUpSourceAttributeDestroy;
   id: DeliveryVariantPickUpSourceAttributeId;
 };
-type DeliveryVariantPickUpSourceAddAttribute = {
+export type DeliveryVariantPickUpSourceAddAttribute = {
   pick_up_source_id: PickUpSourceId;
 };
 type DeliveryVariantPickUpSourceAttribute =
@@ -19,20 +22,20 @@ type DeliveryVariantPickUpSourceAttribute =
   | DeliveryVariantPickUpSourceAddAttribute;
 type DeliveryVariantPaymentAttributeId = number;
 type DeliveryVariantPaymentAttributeDestroy = 1;
-type AddDeliveryVariantPaymentAttribute = {
+export type AddDeliveryVariantPaymentAttribute = {
   payment_gateway_id: PaymentGatewayId;
 };
-type RemoveDeliveryVariantPaymentAttribute = {
+export type RemoveDeliveryVariantPaymentAttribute = {
   _destroy: DeliveryVariantPaymentAttributeDestroy;
   id: DeliveryVariantPaymentAttributeId;
 };
 type DeliveryVariantPaymentAttribute = AddDeliveryVariantPaymentAttribute | RemoveDeliveryVariantPaymentAttribute;
-type DeliveryVariant = {
+export type DeliveryVariant = {
   title: DeliveryVariantTitle;
   type: DeliveryVariantType;
   description?: DeliveryVariantDescription;
 };
-type CreateDeliveryVariant = {
+export type CreateDeliveryVariant = {
   delivery_variant: {
     title: DeliveryVariantTitle;
     type: DeliveryVariantType;
@@ -42,7 +45,7 @@ type CreateDeliveryVariant = {
     url?: DeliveryVariantUrl;
   };
 };
-type UpdateDeliveryVariant = {
+export type UpdateDeliveryVariant = {
   delivery_variant: {
     title?: DeliveryVariantTitle;
     description?: DeliveryVariantDescription;

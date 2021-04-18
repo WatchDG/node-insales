@@ -1,1 +1,1 @@
-type OrderId = number;
+export type OrderId = number;

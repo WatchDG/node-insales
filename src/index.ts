@@ -1,6 +1,32 @@
 import Axios, { AxiosInstance } from 'axios';
-import { ResultOK, ResultFAIL, ok, tryCatchAsync, TResultAsync } from 'node-result';
-import { CreateJsTag, JsTag, JsTagId } from './types/js_tag';
+import { ok, fail, tryCatchAsync } from 'node-result';
+import type { TResultAsync } from 'node-result';
+import { createHash } from 'crypto';
+
+import type { Account } from './types/account';
+import type { CreateJsTag, JsTag, JsTagId } from './types/js_tag';
+import type {
+  DeliveryVariant,
+  CreateDeliveryVariant,
+  UpdateDeliveryVariant,
+  DeliveryVariantId,
+  AddDeliveryVariantPaymentAttribute,
+  DeliveryVariantPickUpSourceRemoveAttribute,
+  DeliveryVariantPickUpSourceAttributeId,
+  DeliveryVariantPickUpSourceAddAttribute
+} from './types/delivery_variant';
+import type {
+  PaymentGatewayId,
+  PaymentGateway,
+  CreatePaymentGateway,
+  UpdatePaymentGateway
+} from './types/payment_gateway';
+import type { PickUpSourceId, PickUpSource, CreatePickUpSource, UpdatePickUpSource } from './types/pick_up_source';
+import type { FieldId, CreateField } from './types/field';
+import type { WebHook, WebHookId, CreateWebHook, UpdateWebHook } from './types/webhook';
+import type { DomainId, Domain } from './types/domain';
+import type { OrderId } from './types/order';
+import axios from 'axios';
 
 /**
  * InSales
@@ -12,12 +38,8 @@ export class InSales {
     this.instance = Axios.create({ baseURL, timeout, headers });
   }
 
-  /**
-   * get account data
-   * @return Promise<ResultOK<Account> | ResultFAIL<Error>>
-   */
   @tryCatchAsync
-  async getAccount(): Promise<ResultOK<Account> | ResultFAIL<Error>> {
+  async getAccount(): TResultAsync<Account, Error> {
     const { data } = await this.instance.get('/admin/account.json');
     return ok(data);
   }
@@ -32,53 +54,32 @@ export class InSales {
     return ok(data);
   }
 
-  /**
-   * get all domains
-   */
   @tryCatchAsync
-  async getDomains(): TResultAsync<any, Error> {
+  async domains(): TResultAsync<Domain[], Error> {
     const { data } = await this.instance.get(`/admin/domains.json`);
     return ok(data);
   }
 
-  /**
-   * get domain by domain id
-   * @param {DomainId} id - domain id
-   */
   @tryCatchAsync
-  async getDomain(id: DomainId): TResultAsync<any, Error> {
+  async domain(id: DomainId): TResultAsync<Domain, Error> {
     const { data } = await this.instance.get(`/admin/domains/${id}.json`);
     return ok(data);
   }
 
-  /**
-   * get all delivery variants
-   * @return Promise<ResultOK<DeliveryVariant[]> | ResultFAIL<Error>>
-   */
   @tryCatchAsync
   async getDeliveryVariants(): TResultAsync<DeliveryVariant[], Error> {
     const { data } = await this.instance.get('/admin/delivery_variants.json');
     return ok(data);
   }
 
-  /**
-   * get delivery variant by delivery variant id
-   * @param {DeliveryVariantId} id - delivery variant id
-   * @return Promise<ResultOK<DeliveryVariant> | ResultFAIL<Error>>
-   */
   @tryCatchAsync
   async getDeliveryVariant(id: DeliveryVariantId): TResultAsync<DeliveryVariant, Error> {
     const { data } = await this.instance.get(`/admin/delivery_variants/${id}.json`);
     return ok(data);
   }
 
-  /**
-   * create delivery variant
-   * @param {CreateDeliveryVariant} payload - delivery valiant create object
-   * @return Promise<ResultOK<DeliveryVariant> | ResultFAIL<Error>>
-   */
   @tryCatchAsync
-  async createDeliveryVariant(payload: CreateDeliveryVariant): Promise<ResultOK<DeliveryVariant> | ResultFAIL<Error>> {
+  async createDeliveryVariant(payload: CreateDeliveryVariant): TResultAsync<DeliveryVariant, Error> {
     const { data } = await this.instance.post('/admin/delivery_variants.json', payload);
     return ok(data);
   }
@@ -125,23 +126,14 @@ export class InSales {
     return { _destroy: 1, id: deliveryVariantPickUpSourceAttributeId };
   }
 
-  /**
-   * Получить все платежные шлюзы.
-   * @return Promise<ResultOK<PaymentGateway[]> | ResultFAIL<Error>>
-   */
   @tryCatchAsync
-  async getPaymentGateways(): Promise<ResultOK<PaymentGateway[]> | ResultFAIL<Error>> {
+  async getPaymentGateways(): TResultAsync<PaymentGateway[], Error> {
     const { data } = await this.instance.get('/admin/payment_gateways.json');
     return ok(data);
   }
 
-  /**
-   * Получить платежный шлюз.
-   * @param {PaymentGatewayId} id - идентификатор платежного шлюза
-   * @return Promise<ResultOK<PaymentGateway> | ResultFAIL<Error>>
-   */
   @tryCatchAsync
-  async getPaymentGateway(id: PaymentGatewayId): Promise<ResultOK<PaymentGateway> | ResultFAIL<Error>> {
+  async getPaymentGateway(id: PaymentGatewayId): TResultAsync<PaymentGateway, Error> {
     const { data } = await this.instance.get(`/admin/payment_gateways/${id}.json`);
     return ok(data);
   }
@@ -181,7 +173,7 @@ export class InSales {
    * Получить все веб хуки.
    */
   @tryCatchAsync
-  async getWebHooks(): Promise<ResultOK<WebHook[]> | ResultFAIL<Error>> {
+  async getWebHooks(): TResultAsync<WebHook[], Error> {
     const { data } = await this.instance.get('/admin/webhooks.json');
     return ok(data);
   }
@@ -191,7 +183,7 @@ export class InSales {
    * @param {WebHookId} id - идентификатор веб хука
    */
   @tryCatchAsync
-  async getWebHook(id: WebHookId): Promise<ResultOK<WebHook> | ResultFAIL<Error>> {
+  async getWebHook(id: WebHookId): TResultAsync<WebHook, Error> {
     const { data } = await this.instance.get(`/admin/webhooks/${id}.json`);
     return ok(data);
   }
@@ -201,7 +193,7 @@ export class InSales {
    * @param {CreateWebHook} payload - объект создания веб хука
    */
   @tryCatchAsync
-  async createWebHook(payload: CreateWebHook): Promise<ResultOK<WebHook> | ResultFAIL<Error>> {
+  async createWebHook(payload: CreateWebHook): TResultAsync<WebHook, Error> {
     const { data } = await this.instance.post(`/admin/webhooks.json`, payload);
     return ok(data);
   }
@@ -227,49 +219,26 @@ export class InSales {
     return ok(data);
   }
 
-  /**
-   * Получить все источники пунктов выдачи.
-   * @return Promise<ResultOK<PickUpSource[]> | ResultFAIL<Error>>
-   */
   @tryCatchAsync
-  async getPickUpSources(): Promise<ResultOK<PickUpSource[]> | ResultFAIL<Error>> {
+  async getPickUpSources(): TResultAsync<PickUpSource[], Error> {
     const { data } = await this.instance.get('/admin/pick_up_sources.json');
     return ok(data);
   }
 
-  /**
-   * Получить источник пунктов выдачи.
-   * @param {PickUpSourceId} id - идентификатор источника пунктов выдачи
-   * @return Promise<ResultOK<PickUpSource> | ResultFAIL<Error>>
-   */
   @tryCatchAsync
-  async getPickUpSource(id: PickUpSourceId): Promise<ResultOK<PickUpSource> | ResultFAIL<Error>> {
+  async getPickUpSource(id: PickUpSourceId): TResultAsync<PickUpSource, Error> {
     const { data } = await this.instance.get(`/admin/pick_up_sources/${id}.json`);
     return ok(data);
   }
 
-  /**
-   * Создать источник пунктов выдачи.
-   * @param {CreatePickUpSource} payload - объект создания источника пунктов выдачи
-   * @return Promise<ResultOK<PickUpSource> | ResultFAIL<Error>>
-   */
   @tryCatchAsync
-  async createPickUpSource(payload: CreatePickUpSource): Promise<ResultOK<PickUpSource> | ResultFAIL<Error>> {
+  async createPickUpSource(payload: CreatePickUpSource): TResultAsync<PickUpSource, Error> {
     const { data } = await this.instance.post('/admin/pick_up_sources.json', payload);
     return ok(data);
   }
 
-  /**
-   * Обновить источник пунктов выдачи.
-   * @param {PickUpSourceId} id - идентификатор источника пунктов выдачи
-   * @param {UpdatePickUpSource} payload - объект обновлления источника пунктов выдачи
-   * @return Promise<ResultOK<PickUpSource> | ResultFAIL<Error>>
-   */
   @tryCatchAsync
-  async updatePickUpSource(
-    id: PickUpSourceId,
-    payload: UpdatePickUpSource
-  ): Promise<ResultOK<PickUpSource> | ResultFAIL<Error>> {
+  async updatePickUpSource(id: PickUpSourceId, payload: UpdatePickUpSource): TResultAsync<PickUpSource, Error> {
     const { data } = await this.instance.put(`/admin/pick_up_sources/${id}.json`, payload);
     return ok(data);
   }
@@ -404,5 +373,37 @@ export class InSales {
   async destroyJsTag(jsTagId: JsTagId): TResultAsync<null, Error> {
     await this.instance.delete(`/admin/js_tags/${jsTagId}.json`);
     return ok(null);
+  }
+
+  @tryCatchAsync
+  static async updateOrderPaymentStatus(options: {
+    paid: '1' | '0';
+    amount: string;
+    key: string;
+    transaction_id: string;
+    shop_id: string;
+    password: string;
+    server_url: string;
+  }): TResultAsync<any, Error> {
+    const { paid, amount, key, transaction_id, shop_id, password, server_url } = options;
+    const signature = createHash('md5')
+      .update(`${shop_id};${amount};${transaction_id};${key};${paid};${password}`)
+      .digest('hex');
+    const payload = {
+      paid,
+      amount,
+      key,
+      transaction_id,
+      signature,
+      shop_id
+    };
+    const { data } = await axios.post(server_url, payload);
+    if (data.status === 'ok') {
+      return ok(null);
+    }
+    if (data.status === 'error') {
+      return fail(new Error(data.errors[0]));
+    }
+    return fail(new Error('unknown'));
   }
 }

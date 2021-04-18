@@ -1,4 +1,6 @@
-type PaymentGatewayId = number;
+import type { DeliveryVariantId } from './delivery_variant';
+
+export type PaymentGatewayId = number;
 type PaymentGatewayTitle = string;
 type PaymentGatewayDescription = string;
 type PaymentGatewayPosition = number;
@@ -25,7 +27,7 @@ type RemovePaymentGatewayPaymentDeliveryVariantsAttribute = {
 type PaymentGatewayPaymentDeliveryVariantsAttribute =
   | AddPaymentGatewayPaymentDeliveryVariantsAttribute
   | RemovePaymentGatewayPaymentDeliveryVariantsAttribute;
-type PaymentGateway = {
+export type PaymentGateway = {
   id: PaymentGatewayId;
   position: PaymentGatewayPosition;
   type: PaymentGatewayType;
@@ -38,7 +40,7 @@ type PaymentGateway = {
   description: PaymentGatewayDescription;
   payment_delivery_variants: PaymentGatewayDeliveryVariant[];
 };
-type CreatePaymentGateway = {
+export type CreatePaymentGateway = {
   payment_gateway: {
     title: PaymentGatewayTitle;
     type: PaymentGatewayType;
@@ -48,7 +50,7 @@ type CreatePaymentGateway = {
     add_delivery_variants?: PaymentGatewayAddDeliveryVariants;
   };
 };
-type UpdatePaymentGateway = {
+export type UpdatePaymentGateway = {
   payment_gateway: {
     title?: PaymentGatewayTitle;
     margin?: PaymentGatewayMargin;

@@ -22,7 +22,7 @@
     "fmt": "npx prettier --write \"src/**/*.ts\"",
     "lint": "eslint --ext=ts src",
     "build": "npx tsc",
-    "run": "npx ts-node src/index.ts",
+    "run": "npx ts-node src/main.ts",
     "postinstall": "husky install",
     "prepublishOnly": "pinst --disable",
     "prepare": "npm run build",
@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "http-instance": "^7.0.4",
     "node-result": "^12.0.0"
   },
   "devDependencies": {

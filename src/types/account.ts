@@ -36,7 +36,7 @@ type AccountOwner = {
   email: AccountOwnerEmail;
   created_at: AccountOwnerCreatedAt;
 };
-type Account = {
+export type Account = {
   id: AccountId;
   subdomain: AccountSubdomain;
   organization: AccountOrganization | null;
