@@ -79,8 +79,11 @@ export class InSales {
   }
 
   @tryCatchAsync
-  async createDeliveryVariant(payload: CreateDeliveryVariant): TResultAsync<DeliveryVariant, Error> {
-    const { data } = await this.instance.post('/admin/delivery_variants.json', payload);
+  async createDeliveryVariant(createDeliveryVariant: CreateDeliveryVariant): TResultAsync<DeliveryVariant, Error> {
+    const payload = {
+      delivery_variant: createDeliveryVariant
+    };
+    const { data } = await this.instance.post(`/admin/delivery_variants.json`, payload);
     return ok(data);
   }
 

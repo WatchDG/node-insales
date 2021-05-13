@@ -3,10 +3,10 @@ import type { PaymentGatewayId } from './payment_gateway';
 
 export type DeliveryVariantId = number;
 type DeliveryVariantTitle = string;
-type DeliveryVariantType = 'DeliveryVariant::PickUp';
+type DeliveryVariantType = 'DeliveryVariant::PickUp' | 'DeliveryVariant::External' | string;
 type DeliveryVariantDescription = string;
 type DeliveryVariantPosition = number;
-type DeliveryVariantAddPaymentGateways = true;
+type DeliveryVariantAddPaymentGateways = boolean;
 type DeliveryVariantUrl = string;
 export type DeliveryVariantPickUpSourceAttributeId = number;
 type DeliveryVariantPickUpSourceAttributeDestroy = 1;
@@ -36,14 +36,13 @@ export type DeliveryVariant = {
   description?: DeliveryVariantDescription;
 };
 export type CreateDeliveryVariant = {
-  delivery_variant: {
-    title: DeliveryVariantTitle;
-    type: DeliveryVariantType;
-    description?: DeliveryVariantDescription;
-    position?: DeliveryVariantPosition;
-    add_payment_gateways?: DeliveryVariantAddPaymentGateways;
-    url?: DeliveryVariantUrl;
-  };
+  title: DeliveryVariantTitle;
+  type: DeliveryVariantType;
+  description?: DeliveryVariantDescription;
+  position?: DeliveryVariantPosition;
+  add_payment_gateways?: DeliveryVariantAddPaymentGateways;
+  url?: DeliveryVariantUrl;
+  api_version?: 'v2';
 };
 export type UpdateDeliveryVariant = {
   delivery_variant: {
