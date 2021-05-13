@@ -1,6 +1,6 @@
 {
   "name": "node-insales",
-  "version": "5.2.0",
+  "version": "6.0.0",
   "description": "module for creating InSales API calls",
   "keywords": [
     "insales",
