@@ -225,21 +225,26 @@ export class InSales {
   }
 
   @tryCatchAsync
-  async createPickUpSource(payload: CreatePickUpSource): TResultAsync<PickUpSource, Error> {
+  async createPickUpSource(createPickUpSource: CreatePickUpSource): TResultAsync<PickUpSource, Error> {
+    const payload = {
+      pick_up_source: createPickUpSource
+    };
     const { data } = await this.instance.post('/admin/pick_up_sources.json', payload);
     return ok(data);
   }
 
   @tryCatchAsync
-  async updatePickUpSource(id: PickUpSourceId, payload: UpdatePickUpSource): TResultAsync<PickUpSource, Error> {
+  async updatePickUpSource(
+    id: PickUpSourceId,
+    updatePickUpSource: UpdatePickUpSource
+  ): TResultAsync<PickUpSource, Error> {
+    const payload = {
+      pick_up_source: updatePickUpSource
+    };
     const { data } = await this.instance.put(`/admin/pick_up_sources/${id}.json`, payload);
     return ok(data);
   }
 
-  /**
-   * Удалить источник пунктов выдачи.
-   * @param {PickUpSourceId} id - идентификатор источника пунктов выдачи
-   */
   @tryCatchAsync
   async destroyPickUpSource(id: PickUpSourceId): TResultAsync<any, Error> {
     const { data } = await this.instance.delete(`/admin/pick_up_sources/${id}.json`);

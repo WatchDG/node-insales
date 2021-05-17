@@ -15,7 +15,6 @@ export type CreateWebHook = {
   topic: WebHookTopic;
   format_type: WebHookFormatType;
 };
-
 export type UpdateWebHook = {
   address?: WebHookAddress;
   topic?: WebHookTopic;
