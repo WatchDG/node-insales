@@ -22,10 +22,10 @@ import type {
   UpdatePaymentGateway
 } from './types/payment_gateway';
 import type { PickUpSourceId, PickUpSource, CreatePickUpSource, UpdatePickUpSource } from './types/pick_up_source';
-import type { FieldId, CreateField } from './types/field';
+import type { FieldId, CreateField, Field } from './types/field';
 import type { WebHook, WebHookId, CreateWebHook, UpdateWebHook } from './types/webhook';
 import type { DomainId, Domain } from './types/domain';
-import type { OrderId } from './types/order';
+import type { OrderId, Order } from './types/order';
 import axios from 'axios';
 
 /**
@@ -44,16 +44,6 @@ export class InSales {
     return ok(data);
   }
 
-  /**
-   * get order data by order id
-   * @param {OrderId} id - order id
-   */
-  @tryCatchAsync
-  async getOrder(id: OrderId): TResultAsync<any, Error> {
-    const { data } = await this.instance.get(`/admin/orders/${id}.json`);
-    return ok(data);
-  }
-
   @tryCatchAsync
   async domains(): TResultAsync<Domain[], Error> {
     const { data } = await this.instance.get(`/admin/domains.json`);
@@ -63,6 +53,12 @@ export class InSales {
   @tryCatchAsync
   async domain(id: DomainId): TResultAsync<Domain, Error> {
     const { data } = await this.instance.get(`/admin/domains/${id}.json`);
+    return ok(data);
+  }
+
+  @tryCatchAsync
+  async getOrder(id: OrderId): TResultAsync<Order, Error> {
+    const { data } = await this.instance.get(`/admin/orders/${id}.json`);
     return ok(data);
   }
 
@@ -91,7 +87,7 @@ export class InSales {
   async updateDeliveryVariant(
     id: DeliveryVariantId,
     updateDeliveryVariant: UpdateDeliveryVariant
-  ): TResultAsync<any, Error> {
+  ): TResultAsync<DeliveryVariant, Error> {
     const payload = {
       delivery_variant: updateDeliveryVariant
     };
@@ -99,35 +95,10 @@ export class InSales {
     return ok(data);
   }
 
-  /**
-   * Удалить вариант доставки.
-   * @param {DeliveryVariantId} id - идентификатор варианта доставки
-   */
   @tryCatchAsync
-  async destroyDeliveryVariant(id: DeliveryVariantId): TResultAsync<any, Error> {
-    const { data } = await this.instance.delete(`/admin/delivery_variants/${id}.json`);
-    return ok(data);
-  }
-
-  /**
-   * Создать атрибут добавления платежного щлюза.
-   * @param {PaymentGatewayId} paymentGatewayId - идентификатор платежного шлюза
-   * @return AddDeliveryVariantPaymentAttribute
-   */
-  createAddDeliveryVariantPaymentAttribute(paymentGatewayId: PaymentGatewayId): AddDeliveryVariantPaymentAttribute {
-    return {
-      payment_gateway_id: paymentGatewayId
-    };
-  }
-
-  /**
-   * Создать атрибут удаления источника точек.
-   * @param {DeliveryVariantPickUpSourceAttributeId} deliveryVariantPickUpSourceAttributeId - идентификатор атрибута источника точки
-   */
-  createRemoveDeliveryVariantPickUpSourceAttribute(
-    deliveryVariantPickUpSourceAttributeId: DeliveryVariantPickUpSourceAttributeId
-  ): DeliveryVariantPickUpSourceRemoveAttribute {
-    return { _destroy: 1, id: deliveryVariantPickUpSourceAttributeId };
+  async destroyDeliveryVariant(id: DeliveryVariantId): TResultAsync<null, Error> {
+    await this.instance.delete(`/admin/delivery_variants/${id}.json`);
+    return ok(null);
   }
 
   @tryCatchAsync
@@ -164,24 +135,17 @@ export class InSales {
   }
 
   @tryCatchAsync
-  async destroyPaymentGateway(id: PaymentGatewayId): TResultAsync<any, Error> {
-    const { data } = await this.instance.delete(`/admin/payment_gateways/${id}.json`);
-    return ok(data);
+  async destroyPaymentGateway(id: PaymentGatewayId): TResultAsync<null, Error> {
+    await this.instance.delete(`/admin/payment_gateways/${id}.json`);
+    return ok(null);
   }
 
-  /**
-   * Получить все веб хуки.
-   */
   @tryCatchAsync
   async getWebHooks(): TResultAsync<WebHook[], Error> {
     const { data } = await this.instance.get('/admin/webhooks.json');
     return ok(data);
   }
 
-  /**
-   * Получить веб хук.
-   * @param {WebHookId} id - идентификатор веб хука
-   */
   @tryCatchAsync
   async getWebHook(id: WebHookId): TResultAsync<WebHook, Error> {
     const { data } = await this.instance.get(`/admin/webhooks/${id}.json`);
@@ -198,7 +162,7 @@ export class InSales {
   }
 
   @tryCatchAsync
-  async updateWebHook(id: WebHookId, updateWebHook: UpdateWebHook): TResultAsync<any, Error> {
+  async updateWebHook(id: WebHookId, updateWebHook: UpdateWebHook): TResultAsync<WebHook, Error> {
     const payload = {
       webhook: updateWebHook
     };
@@ -207,9 +171,9 @@ export class InSales {
   }
 
   @tryCatchAsync
-  async destroyWebHook(id: WebHookId): TResultAsync<any, Error> {
-    const { data } = await this.instance.delete(`/admin/webhooks/${id}.json`);
-    return ok(data);
+  async destroyWebHook(id: WebHookId): TResultAsync<null, Error> {
+    await this.instance.delete(`/admin/webhooks/${id}.json`);
+    return ok(null);
   }
 
   @tryCatchAsync
@@ -246,98 +210,33 @@ export class InSales {
   }
 
   @tryCatchAsync
-  async destroyPickUpSource(id: PickUpSourceId): TResultAsync<any, Error> {
-    const { data } = await this.instance.delete(`/admin/pick_up_sources/${id}.json`);
-    return ok(data);
+  async destroyPickUpSource(id: PickUpSourceId): TResultAsync<null, Error> {
+    await this.instance.delete(`/admin/pick_up_sources/${id}.json`);
+    return ok(null);
   }
 
-  /**
-   * Получить все поля.
-   */
   @tryCatchAsync
-  async getFields(): TResultAsync<any, Error> {
+  async getFields(): TResultAsync<Field[], Error> {
     const { data } = await this.instance.get('/admin/fields.json');
     return ok(data);
   }
 
-  /**
-   * Получить поле.
-   * @param {FieldId} id - идентификатор поля
-   */
   @tryCatchAsync
-  async getField(id: FieldId): TResultAsync<any, Error> {
+  async getField(id: FieldId): TResultAsync<Field, Error> {
     const { data } = await this.instance.get(`/admin/fields/${id}.json`);
     return ok(data);
   }
 
-  /**
-   * Создать поле.
-   * @param {CreateField} payload - объект создания поля
-   */
   @tryCatchAsync
-  async createField(payload: CreateField): TResultAsync<any, Error> {
+  async createField(payload: CreateField): TResultAsync<Field, Error> {
     const { data } = await this.instance.post('/admin/fields.json', payload);
     return ok(data);
   }
 
-  /**
-   * Удалить поле.
-   * @param {FieldId} id - идентификатор поля
-   */
   @tryCatchAsync
-  async destroyField(id: FieldId): TResultAsync<any, Error> {
-    const { data } = await this.instance.delete(`/admin/fields/${id}.json`);
-    return ok(data);
-  }
-
-  @tryCatchAsync
-  async removePickUpSourcesFromDeliveryVariant(
-    deliveryVariantId: DeliveryVariantId,
-    deliveryVariantPickUpSourceAttributeIds: DeliveryVariantPickUpSourceAttributeId[]
-  ) {
-    const deliveryVariantPickUpSourceAttributes = deliveryVariantPickUpSourceAttributeIds.map(
-      this.createRemoveDeliveryVariantPickUpSourceAttribute
-    );
-    const payload = {
-      pick_up_source_delivery_variants_attributes: deliveryVariantPickUpSourceAttributes
-    };
-    return this.updateDeliveryVariant(deliveryVariantId, payload);
-  }
-
-  createAddDeliveryVariantPickUpSourceAttribute(
-    pickUpSourceId: PickUpSourceId
-  ): DeliveryVariantPickUpSourceAddAttribute {
-    return {
-      pick_up_source_id: pickUpSourceId
-    };
-  }
-
-  @tryCatchAsync
-  async addPickUpSourcesToDeliveryVariant(
-    deliveryVariantId: DeliveryVariantId,
-    deliveryVariantPickUpSourceAttributeIds: DeliveryVariantPickUpSourceAttributeId[]
-  ) {
-    const deliveryVariantPickUpSourceAttributes = deliveryVariantPickUpSourceAttributeIds.map(
-      this.createAddDeliveryVariantPickUpSourceAttribute
-    );
-    const payload = {
-      pick_up_source_delivery_variants_attributes: deliveryVariantPickUpSourceAttributes
-    };
-    return this.updateDeliveryVariant(deliveryVariantId, payload);
-  }
-
-  @tryCatchAsync
-  async addPaymentsToDeliveryVariant(
-    deliveryVariantId: DeliveryVariantId,
-    deliveryVariantPaymentAttributeIds: PaymentGatewayId[]
-  ) {
-    const deliveryVariantPaymentAttributes = deliveryVariantPaymentAttributeIds.map(
-      this.createAddDeliveryVariantPaymentAttribute
-    );
-    const payload = {
-      payment_delivery_variants_attributes: deliveryVariantPaymentAttributes
-    };
-    return this.updateDeliveryVariant(deliveryVariantId, payload);
+  async destroyField(id: FieldId): TResultAsync<null, Error> {
+    await this.instance.delete(`/admin/fields/${id}.json`);
+    return ok(null);
   }
 
   @tryCatchAsync
@@ -368,6 +267,48 @@ export class InSales {
   }
 
   @tryCatchAsync
+  async addPickUpSourcesToDeliveryVariant(
+    deliveryVariantId: DeliveryVariantId,
+    deliveryVariantPickUpSourceAttributeIds: DeliveryVariantPickUpSourceAttributeId[]
+  ): TResultAsync<DeliveryVariant, Error> {
+    const deliveryVariantPickUpSourceAttributes = deliveryVariantPickUpSourceAttributeIds.map(
+      InSales.createAddDeliveryVariantPickUpSourceAttribute
+    );
+    const payload = {
+      pick_up_source_delivery_variants_attributes: deliveryVariantPickUpSourceAttributes
+    };
+    return this.updateDeliveryVariant(deliveryVariantId, payload);
+  }
+
+  @tryCatchAsync
+  async removePickUpSourcesFromDeliveryVariant(
+    deliveryVariantId: DeliveryVariantId,
+    deliveryVariantPickUpSourceAttributeIds: DeliveryVariantPickUpSourceAttributeId[]
+  ): TResultAsync<DeliveryVariant, Error> {
+    const deliveryVariantPickUpSourceAttributes = deliveryVariantPickUpSourceAttributeIds.map(
+      InSales.createRemoveDeliveryVariantPickUpSourceAttribute
+    );
+    const payload = {
+      pick_up_source_delivery_variants_attributes: deliveryVariantPickUpSourceAttributes
+    };
+    return this.updateDeliveryVariant(deliveryVariantId, payload);
+  }
+
+  @tryCatchAsync
+  async addPaymentsToDeliveryVariant(
+    deliveryVariantId: DeliveryVariantId,
+    deliveryVariantPaymentAttributeIds: PaymentGatewayId[]
+  ): TResultAsync<DeliveryVariant, Error> {
+    const deliveryVariantPaymentAttributes = deliveryVariantPaymentAttributeIds.map(
+      InSales.createAddDeliveryVariantPaymentAttribute
+    );
+    const payload = {
+      payment_delivery_variants_attributes: deliveryVariantPaymentAttributes
+    };
+    return this.updateDeliveryVariant(deliveryVariantId, payload);
+  }
+
+  @tryCatchAsync
   static async updateOrderPaymentStatus(options: {
     paid: '1' | '0';
     amount: string;
@@ -376,7 +317,7 @@ export class InSales {
     shop_id: string;
     password: string;
     server_url: string;
-  }): TResultAsync<any, Error> {
+  }): TResultAsync<null, Error> {
     const { paid, amount, key, transaction_id, shop_id, password, server_url } = options;
     const signature = createHash('md5')
       .update(`${shop_id};${amount};${transaction_id};${key};${paid};${password}`)
@@ -397,5 +338,27 @@ export class InSales {
       return fail(new Error(data.errors[0]));
     }
     return fail(new Error('unknown'));
+  }
+
+  static createAddDeliveryVariantPaymentAttribute(
+    paymentGatewayId: PaymentGatewayId
+  ): AddDeliveryVariantPaymentAttribute {
+    return {
+      payment_gateway_id: paymentGatewayId
+    };
+  }
+
+  static createAddDeliveryVariantPickUpSourceAttribute(
+    pickUpSourceId: PickUpSourceId
+  ): DeliveryVariantPickUpSourceAddAttribute {
+    return {
+      pick_up_source_id: pickUpSourceId
+    };
+  }
+
+  static createRemoveDeliveryVariantPickUpSourceAttribute(
+    deliveryVariantPickUpSourceAttributeId: DeliveryVariantPickUpSourceAttributeId
+  ): DeliveryVariantPickUpSourceRemoveAttribute {
+    return { _destroy: 1, id: deliveryVariantPickUpSourceAttributeId };
   }
 }
