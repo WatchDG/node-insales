@@ -1,30 +1,30 @@
 import type { DeliveryVariantId } from './delivery_variant';
 
 export type PaymentGatewayId = number;
-type PaymentGatewayTitle = string;
-type PaymentGatewayDescription = string;
-type PaymentGatewayPosition = number;
-type PaymentGatewayType = 'PaymentGateway::Custom' | 'PaymentGateway::Cod';
-type PaymentGatewayCreatedAt = string;
-type PaymentGatewayUpdatedAt = string;
-type PaymentGatewayMargin = string;
-type PaymentGatewayDeliveryVariantId = number;
-type PaymentGatewayAddDeliveryVariants = boolean;
-type PaymentGatewayDeliveryVariant = {
+export type PaymentGatewayTitle = string;
+export type PaymentGatewayDescription = string;
+export type PaymentGatewayPosition = number;
+export type PaymentGatewayType = 'PaymentGateway::Custom' | 'PaymentGateway::Cod';
+export type PaymentGatewayCreatedAt = string;
+export type PaymentGatewayUpdatedAt = string;
+export type PaymentGatewayMargin = string;
+export type PaymentGatewayDeliveryVariantId = number;
+export type PaymentGatewayAddDeliveryVariants = boolean;
+export type PaymentGatewayDeliveryVariant = {
   id: PaymentGatewayDeliveryVariantId;
   delivery_variant_id: DeliveryVariantId;
   created_at: string;
 };
-type PaymentGatewayPaymentDeliveryVariantsAttributeId = number;
-type PaymentGatewayPaymentDeliveryVariantsAttributeDestroy = 1;
-type AddPaymentGatewayPaymentDeliveryVariantsAttribute = {
+export type PaymentGatewayPaymentDeliveryVariantsAttributeId = number;
+export type PaymentGatewayPaymentDeliveryVariantsAttributeDestroy = 1;
+export type AddPaymentGatewayPaymentDeliveryVariantsAttribute = {
   delivery_variant_id: DeliveryVariantId;
 };
-type RemovePaymentGatewayPaymentDeliveryVariantsAttribute = {
+export type RemovePaymentGatewayPaymentDeliveryVariantsAttribute = {
   _destroy: PaymentGatewayPaymentDeliveryVariantsAttributeDestroy;
   id: PaymentGatewayPaymentDeliveryVariantsAttributeId;
 };
-type PaymentGatewayPaymentDeliveryVariantsAttribute =
+export type PaymentGatewayPaymentDeliveryVariantsAttribute =
   | AddPaymentGatewayPaymentDeliveryVariantsAttribute
   | RemovePaymentGatewayPaymentDeliveryVariantsAttribute;
 export type PaymentGateway = {
@@ -41,21 +41,17 @@ export type PaymentGateway = {
   payment_delivery_variants: PaymentGatewayDeliveryVariant[];
 };
 export type CreatePaymentGateway = {
-  payment_gateway: {
-    title: PaymentGatewayTitle;
-    type: PaymentGatewayType;
-    margin?: PaymentGatewayMargin;
-    position?: PaymentGatewayPosition;
-    description?: PaymentGatewayDescription;
-    add_delivery_variants?: PaymentGatewayAddDeliveryVariants;
-  };
+  title: PaymentGatewayTitle;
+  type: PaymentGatewayType;
+  margin?: PaymentGatewayMargin;
+  position?: PaymentGatewayPosition;
+  description?: PaymentGatewayDescription;
+  add_delivery_variants?: PaymentGatewayAddDeliveryVariants;
 };
 export type UpdatePaymentGateway = {
-  payment_gateway: {
-    title?: PaymentGatewayTitle;
-    margin?: PaymentGatewayMargin;
-    position?: PaymentGatewayPosition;
-    description?: PaymentGatewayDescription;
-    payment_delivery_variants_attributes?: PaymentGatewayPaymentDeliveryVariantsAttribute[];
-  };
+  title?: PaymentGatewayTitle;
+  margin?: PaymentGatewayMargin;
+  position?: PaymentGatewayPosition;
+  description?: PaymentGatewayDescription;
+  payment_delivery_variants_attributes?: PaymentGatewayPaymentDeliveryVariantsAttribute[];
 };

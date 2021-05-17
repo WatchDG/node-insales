@@ -142,31 +142,27 @@ export class InSales {
     return ok(data);
   }
 
-  /**
-   * Создать платежный шлюз.
-   * @param {createPaymentGateway} payload - объект создания платежного шлюза
-   */
   @tryCatchAsync
-  async createPaymentGateway(payload: CreatePaymentGateway): TResultAsync<any, Error> {
+  async createPaymentGateway(createPaymentGateway: CreatePaymentGateway): TResultAsync<PaymentGateway, Error> {
+    const payload = {
+      payment_gateway: createPaymentGateway
+    };
     const { data } = await this.instance.post('/admin/payment_gateways.json', payload);
     return ok(data);
   }
 
-  /**
-   * Обновить платежный шлюз.
-   * @param {PaymentGatewayId} id - идентификатор платежного шлюза
-   * @param {UpdatePaymentGateway} payload - объект обновления платежного шлюза
-   */
   @tryCatchAsync
-  async updatePaymentGateway(id: PaymentGatewayId, payload: UpdatePaymentGateway): TResultAsync<any, Error> {
+  async updatePaymentGateway(
+    id: PaymentGatewayId,
+    updatePaymentGateway: UpdatePaymentGateway
+  ): TResultAsync<PaymentGateway, Error> {
+    const payload = {
+      payment_gateway: updatePaymentGateway
+    };
     const { data } = await this.instance.put(`/admin/payment_gateways/${id}.json`, payload);
     return ok(data);
   }
 
-  /**
-   * Удалить платежный шлюз.
-   * @param {PaymentGatewayId} id - идентификатор платежного шлюза
-   */
   @tryCatchAsync
   async destroyPaymentGateway(id: PaymentGatewayId): TResultAsync<any, Error> {
     const { data } = await this.instance.delete(`/admin/payment_gateways/${id}.json`);
