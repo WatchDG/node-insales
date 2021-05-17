@@ -191,31 +191,24 @@ export class InSales {
     return ok(data);
   }
 
-  /**
-   * Создать веб хук.
-   * @param {CreateWebHook} payload - объект создания веб хука
-   */
   @tryCatchAsync
-  async createWebHook(payload: CreateWebHook): TResultAsync<WebHook, Error> {
+  async createWebHook(createWebHook: CreateWebHook): TResultAsync<WebHook, Error> {
+    const payload = {
+      webhook: createWebHook
+    };
     const { data } = await this.instance.post(`/admin/webhooks.json`, payload);
     return ok(data);
   }
 
-  /**
-   * Обновить веб хук
-   * @param id -
-   * @param payload -
-   */
   @tryCatchAsync
-  async updateWebHook(id: WebHookId, payload: UpdateWebHook): TResultAsync<any, Error> {
+  async updateWebHook(id: WebHookId, updateWebHook: UpdateWebHook): TResultAsync<any, Error> {
+    const payload = {
+      webhook: updateWebHook
+    };
     const { data } = await this.instance.put(`/admin/webhooks/${id}.json`, payload);
     return ok(data);
   }
 
-  /**
-   * Удалить веб хук.
-   * @param {WebHookId} id - идентификатор веб хука
-   */
   @tryCatchAsync
   async destroyWebHook(id: WebHookId): TResultAsync<any, Error> {
     const { data } = await this.instance.delete(`/admin/webhooks/${id}.json`);
