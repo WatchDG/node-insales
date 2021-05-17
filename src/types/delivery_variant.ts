@@ -37,6 +37,7 @@ export type DeliveryVariant = {
   title: DeliveryVariantTitle;
   type: DeliveryVariantType;
   description?: DeliveryVariantDescription;
+  url?: DeliveryVariantUrl;
 };
 export type CreateDeliveryVariant = {
   title: DeliveryVariantTitle;
