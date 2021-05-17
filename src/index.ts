@@ -87,13 +87,14 @@ export class InSales {
     return ok(data);
   }
 
-  /**
-   * Обновить вариант доставки.
-   * @param {DeliveryVariantId} id - идентификатор варианта доставки
-   * @param {UpdateDeliveryVariant} payload - объект обновления варианта доставки
-   */
   @tryCatchAsync
-  async updateDeliveryVariant(id: DeliveryVariantId, payload: UpdateDeliveryVariant): TResultAsync<any, Error> {
+  async updateDeliveryVariant(
+    id: DeliveryVariantId,
+    updateDeliveryVariant: UpdateDeliveryVariant
+  ): TResultAsync<any, Error> {
+    const payload = {
+      delivery_variant: updateDeliveryVariant
+    };
     const { data } = await this.instance.put(`/admin/delivery_variants/${id}.json`, payload);
     return ok(data);
   }
@@ -297,9 +298,7 @@ export class InSales {
       this.createRemoveDeliveryVariantPickUpSourceAttribute
     );
     const payload = {
-      delivery_variant: {
-        pick_up_source_delivery_variants_attributes: deliveryVariantPickUpSourceAttributes
-      }
+      pick_up_source_delivery_variants_attributes: deliveryVariantPickUpSourceAttributes
     };
     return this.updateDeliveryVariant(deliveryVariantId, payload);
   }
@@ -321,9 +320,7 @@ export class InSales {
       this.createAddDeliveryVariantPickUpSourceAttribute
     );
     const payload = {
-      delivery_variant: {
-        pick_up_source_delivery_variants_attributes: deliveryVariantPickUpSourceAttributes
-      }
+      pick_up_source_delivery_variants_attributes: deliveryVariantPickUpSourceAttributes
     };
     return this.updateDeliveryVariant(deliveryVariantId, payload);
   }
@@ -337,9 +334,7 @@ export class InSales {
       this.createAddDeliveryVariantPaymentAttribute
     );
     const payload = {
-      delivery_variant: {
-        payment_delivery_variants_attributes: deliveryVariantPaymentAttributes
-      }
+      payment_delivery_variants_attributes: deliveryVariantPaymentAttributes
     };
     return this.updateDeliveryVariant(deliveryVariantId, payload);
   }
