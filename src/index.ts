@@ -27,6 +27,7 @@ import type { FieldId, CreateField, Field } from './types/field';
 import type { WebHook, WebHookId, CreateWebHook, UpdateWebHook } from './types/webhook';
 import type { DomainId, Domain } from './types/domain';
 import type { OrderId, Order } from './types/order';
+import { CreateDiscountCode, DiscountCode, DiscountCodeId, UpdateDiscountCode } from './types/discount_code';
 
 /**
  * InSales
@@ -128,7 +129,7 @@ export class InSales {
 
   @tryCatchAsync
   async destroyDeliveryVariant(id: DeliveryVariantId): TResultAsync<null, Error> {
-    await this.instance.delete(`/admin/delivery_variants/${id}.json`);
+    (await this.instance.delete(`/admin/delivery_variants/${id}.json`)).unwrap();
     return ok(null);
   }
 
@@ -171,7 +172,7 @@ export class InSales {
 
   @tryCatchAsync
   async destroyPaymentGateway(id: PaymentGatewayId): TResultAsync<null, Error> {
-    await this.instance.delete(`/admin/payment_gateways/${id}.json`);
+    (await this.instance.delete(`/admin/payment_gateways/${id}.json`)).unwrap();
     return ok(null);
   }
 
@@ -211,7 +212,7 @@ export class InSales {
 
   @tryCatchAsync
   async destroyWebHook(id: WebHookId): TResultAsync<null, Error> {
-    await this.instance.delete(`/admin/webhooks/${id}.json`);
+    (await this.instance.delete(`/admin/webhooks/${id}.json`)).unwrap();
     return ok(null);
   }
 
@@ -254,7 +255,7 @@ export class InSales {
 
   @tryCatchAsync
   async destroyPickUpSource(id: PickUpSourceId): TResultAsync<null, Error> {
-    await this.instance.delete(`/admin/pick_up_sources/${id}.json`);
+    (await this.instance.delete(`/admin/pick_up_sources/${id}.json`)).unwrap();
     return ok(null);
   }
 
@@ -281,7 +282,7 @@ export class InSales {
 
   @tryCatchAsync
   async destroyField(id: FieldId): TResultAsync<null, Error> {
-    await this.instance.delete(`/admin/fields/${id}.json`);
+    (await this.instance.delete(`/admin/fields/${id}.json`)).unwrap();
     return ok(null);
   }
 
@@ -311,7 +312,52 @@ export class InSales {
 
   @tryCatchAsync
   async destroyJsTag(jsTagId: JsTagId): TResultAsync<null, Error> {
-    await this.instance.delete(`/admin/js_tags/${jsTagId}.json`);
+    (await this.instance.delete(`/admin/js_tags/${jsTagId}.json`)).unwrap();
+    return ok(null);
+  }
+
+  @tryCatchAsync
+  async getDiscountCodes(): TResultAsync<DiscountCode[], Error> {
+    const response = (await this.instance.post<DiscountCode[]>('/admin/discount_codes.json')).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
+    return ok(data);
+  }
+
+  @tryCatchAsync
+  async getDiscountCode(discountCodeId: DiscountCodeId): TResultAsync<DiscountCode, Error> {
+    const response = (await this.instance.post<DiscountCode>(`/admin/discount_codes/${discountCodeId}.json`)).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
+    return ok(data);
+  }
+
+  @tryCatchAsync
+  async createDiscountCode(createDiscountCode: CreateDiscountCode): TResultAsync<DiscountCode, Error> {
+    const payload = {
+      discount_code: createDiscountCode
+    };
+    const response = (await this.instance.post<DiscountCode>('/admin/discount_codes.json', payload)).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
+    return ok(data);
+  }
+
+  @tryCatchAsync
+  async updateDiscountCode(
+    discountCodeId: DiscountCodeId,
+    updateDiscountCode: UpdateDiscountCode
+  ): TResultAsync<DiscountCode, Error> {
+    const payload = {
+      discount_code: updateDiscountCode
+    };
+    const response = (
+      await this.instance.put<DiscountCode>(`/admin/discount_codes/${discountCodeId}.json`, payload)
+    ).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
+    return ok(data);
+  }
+
+  @tryCatchAsync
+  async destroyDiscountCode(discountCodeId: DiscountCodeId): TResultAsync<null, Error> {
+    (await this.instance.delete(`/admin/discount_codes/${discountCodeId}.json`)).unwrap();
     return ok(null);
   }
 
