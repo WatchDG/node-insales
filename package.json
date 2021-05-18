@@ -28,9 +28,8 @@
     "postpublish": "pinst --enable"
   },
   "dependencies": {
-    "axios": "^0.21.1",
-    "http-instance": "^7.1.1",
-    "node-result": "^12.0.0"
+    "http-instance": "^7.1.2",
+    "node-result": "^12.0.1"
   },
   "devDependencies": {
     "@types/node": "^15.3.0",

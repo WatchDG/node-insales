@@ -1,8 +1,9 @@
-import Axios, { AxiosInstance } from 'axios';
-import { ok, fail, tryCatchAsync } from 'node-result';
-import type { TResultAsync } from 'node-result';
+import * as http from 'http';
+import { ok, fail, tryCatchAsync, TResult } from 'node-result';
 import { createHash } from 'crypto';
+import { HttpInstance, HttpResponse } from 'http-instance';
 
+import type { TResultAsync } from 'node-result';
 import type { Account } from './types/account';
 import type { CreateJsTag, JsTag, JsTagId } from './types/js_tag';
 import type {
@@ -10,10 +11,10 @@ import type {
   CreateDeliveryVariant,
   UpdateDeliveryVariant,
   DeliveryVariantId,
-  AddDeliveryVariantPaymentAttribute,
-  DeliveryVariantPickUpSourceRemoveAttribute,
+  DeliveryVariantAddPaymentAttribute,
+  DeliveryVariantRemovePickUpSourceAttribute,
   DeliveryVariantPickUpSourceAttributeId,
-  DeliveryVariantPickUpSourceAddAttribute
+  DeliveryVariantAddPickUpSourceAttribute
 } from './types/delivery_variant';
 import type {
   PaymentGatewayId,
@@ -26,51 +27,77 @@ import type { FieldId, CreateField, Field } from './types/field';
 import type { WebHook, WebHookId, CreateWebHook, UpdateWebHook } from './types/webhook';
 import type { DomainId, Domain } from './types/domain';
 import type { OrderId, Order } from './types/order';
-import axios from 'axios';
 
 /**
  * InSales
  */
 export class InSales {
-  private readonly instance: AxiosInstance;
+  private readonly instance: HttpInstance;
 
-  constructor(baseURL: string, timeout = 1000, headers: Record<string, string> = {}) {
-    this.instance = Axios.create({ baseURL, timeout, headers });
+  constructor(baseUrl: string, timeout = 1000, headers: Record<string, string> = {}) {
+    // this.instance = Axios.create({ baseURL, timeout, headers });
+    this.instance = new HttpInstance({
+      baseUrl,
+      headers,
+      timeout
+    });
+  }
+
+  private static checkResponse<DataType>(
+    response: HttpResponse<DataType>
+  ): TResult<{ status: number; headers: http.IncomingHttpHeaders; data: DataType }, Error> {
+    const { status, headers, data } = response;
+    if (status !== 200) {
+      return fail(new Error(`Response status code not 200. Status code: ${status}`));
+    }
+    if (!headers['content-type']?.includes('application/json')) {
+      return fail(new Error(`Content type not application/json. Content type: ${headers['content-type']}`));
+    }
+    if (!data) {
+      return fail(new Error(`Empty body`));
+    }
+    return ok({ status, headers, data });
   }
 
   @tryCatchAsync
   async getAccount(): TResultAsync<Account, Error> {
-    const { data } = await this.instance.get('/admin/account.json');
+    const response = (await this.instance.get<Account>('/admin/account.json')).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
   @tryCatchAsync
-  async domains(): TResultAsync<Domain[], Error> {
-    const { data } = await this.instance.get(`/admin/domains.json`);
+  async getDomains(): TResultAsync<Domain[], Error> {
+    const response = (await this.instance.get<Domain[]>(`/admin/domains.json`)).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
   @tryCatchAsync
-  async domain(id: DomainId): TResultAsync<Domain, Error> {
-    const { data } = await this.instance.get(`/admin/domains/${id}.json`);
+  async getDomain(id: DomainId): TResultAsync<Domain, Error> {
+    const response = (await this.instance.get<Domain>(`/admin/domains/${id}.json`)).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
   @tryCatchAsync
   async getOrder(id: OrderId): TResultAsync<Order, Error> {
-    const { data } = await this.instance.get(`/admin/orders/${id}.json`);
+    const response = (await this.instance.get<Order>(`/admin/orders/${id}.json`)).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
   @tryCatchAsync
   async getDeliveryVariants(): TResultAsync<DeliveryVariant[], Error> {
-    const { data } = await this.instance.get('/admin/delivery_variants.json');
+    const response = (await this.instance.get<DeliveryVariant[]>('/admin/delivery_variants.json')).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
   @tryCatchAsync
   async getDeliveryVariant(id: DeliveryVariantId): TResultAsync<DeliveryVariant, Error> {
-    const { data } = await this.instance.get(`/admin/delivery_variants/${id}.json`);
+    const response = (await this.instance.get<DeliveryVariant>(`/admin/delivery_variants/${id}.json`)).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
@@ -79,7 +106,8 @@ export class InSales {
     const payload = {
       delivery_variant: createDeliveryVariant
     };
-    const { data } = await this.instance.post(`/admin/delivery_variants.json`, payload);
+    const response = (await this.instance.post<DeliveryVariant>(`/admin/delivery_variants.json`, payload)).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
@@ -91,7 +119,10 @@ export class InSales {
     const payload = {
       delivery_variant: updateDeliveryVariant
     };
-    const { data } = await this.instance.put(`/admin/delivery_variants/${id}.json`, payload);
+    const response = (
+      await this.instance.put<DeliveryVariant>(`/admin/delivery_variants/${id}.json`, payload)
+    ).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
@@ -103,13 +134,15 @@ export class InSales {
 
   @tryCatchAsync
   async getPaymentGateways(): TResultAsync<PaymentGateway[], Error> {
-    const { data } = await this.instance.get('/admin/payment_gateways.json');
+    const response = (await this.instance.get<PaymentGateway[]>('/admin/payment_gateways.json')).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
   @tryCatchAsync
   async getPaymentGateway(id: PaymentGatewayId): TResultAsync<PaymentGateway, Error> {
-    const { data } = await this.instance.get(`/admin/payment_gateways/${id}.json`);
+    const response = (await this.instance.get<PaymentGateway>(`/admin/payment_gateways/${id}.json`)).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
@@ -118,7 +151,8 @@ export class InSales {
     const payload = {
       payment_gateway: createPaymentGateway
     };
-    const { data } = await this.instance.post('/admin/payment_gateways.json', payload);
+    const response = (await this.instance.post<PaymentGateway>('/admin/payment_gateways.json', payload)).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
@@ -130,7 +164,8 @@ export class InSales {
     const payload = {
       payment_gateway: updatePaymentGateway
     };
-    const { data } = await this.instance.put(`/admin/payment_gateways/${id}.json`, payload);
+    const response = (await this.instance.put<PaymentGateway>(`/admin/payment_gateways/${id}.json`, payload)).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
@@ -142,13 +177,15 @@ export class InSales {
 
   @tryCatchAsync
   async getWebHooks(): TResultAsync<WebHook[], Error> {
-    const { data } = await this.instance.get('/admin/webhooks.json');
+    const response = (await this.instance.get<WebHook[]>('/admin/webhooks.json')).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
   @tryCatchAsync
   async getWebHook(id: WebHookId): TResultAsync<WebHook, Error> {
-    const { data } = await this.instance.get(`/admin/webhooks/${id}.json`);
+    const response = (await this.instance.get<WebHook>(`/admin/webhooks/${id}.json`)).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
@@ -157,7 +194,8 @@ export class InSales {
     const payload = {
       webhook: createWebHook
     };
-    const { data } = await this.instance.post(`/admin/webhooks.json`, payload);
+    const response = (await this.instance.post<WebHook>(`/admin/webhooks.json`, payload)).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
@@ -166,7 +204,8 @@ export class InSales {
     const payload = {
       webhook: updateWebHook
     };
-    const { data } = await this.instance.put(`/admin/webhooks/${id}.json`, payload);
+    const response = (await this.instance.put<WebHook>(`/admin/webhooks/${id}.json`, payload)).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
@@ -178,13 +217,15 @@ export class InSales {
 
   @tryCatchAsync
   async getPickUpSources(): TResultAsync<PickUpSource[], Error> {
-    const { data } = await this.instance.get('/admin/pick_up_sources.json');
+    const response = (await this.instance.get<PickUpSource[]>('/admin/pick_up_sources.json')).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
   @tryCatchAsync
   async getPickUpSource(id: PickUpSourceId): TResultAsync<PickUpSource, Error> {
-    const { data } = await this.instance.get(`/admin/pick_up_sources/${id}.json`);
+    const response = (await this.instance.get<PickUpSource>(`/admin/pick_up_sources/${id}.json`)).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
@@ -193,7 +234,8 @@ export class InSales {
     const payload = {
       pick_up_source: createPickUpSource
     };
-    const { data } = await this.instance.post('/admin/pick_up_sources.json', payload);
+    const response = (await this.instance.post<PickUpSource>('/admin/pick_up_sources.json', payload)).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
@@ -205,7 +247,8 @@ export class InSales {
     const payload = {
       pick_up_source: updatePickUpSource
     };
-    const { data } = await this.instance.put(`/admin/pick_up_sources/${id}.json`, payload);
+    const response = (await this.instance.put<PickUpSource>(`/admin/pick_up_sources/${id}.json`, payload)).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
@@ -217,19 +260,22 @@ export class InSales {
 
   @tryCatchAsync
   async getFields(): TResultAsync<Field[], Error> {
-    const { data } = await this.instance.get('/admin/fields.json');
+    const response = (await this.instance.get<Field[]>('/admin/fields.json')).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
   @tryCatchAsync
   async getField(id: FieldId): TResultAsync<Field, Error> {
-    const { data } = await this.instance.get(`/admin/fields/${id}.json`);
+    const response = (await this.instance.get<Field>(`/admin/fields/${id}.json`)).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
   @tryCatchAsync
   async createField(payload: CreateField): TResultAsync<Field, Error> {
-    const { data } = await this.instance.post('/admin/fields.json', payload);
+    const response = (await this.instance.post<Field>('/admin/fields.json', payload)).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
@@ -241,13 +287,15 @@ export class InSales {
 
   @tryCatchAsync
   async getJsTags(): TResultAsync<JsTag[], Error> {
-    const { data } = await this.instance.get(`/admin/js_tags.json`);
+    const response = (await this.instance.get<JsTag[]>(`/admin/js_tags.json`)).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
   @tryCatchAsync
   async getJsTag(jsTagId: JsTagId): TResultAsync<JsTag, Error> {
-    const { data } = await this.instance.get(`/admin/js_tags/${jsTagId}.json`);
+    const response = (await this.instance.get<JsTag>(`/admin/js_tags/${jsTagId}.json`)).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
@@ -256,7 +304,8 @@ export class InSales {
     const payload = {
       js_tag: createJsTag
     };
-    const { data } = await this.instance.post('/admin/js_tags.json', payload);
+    const response = (await this.instance.post<JsTag>('/admin/js_tags.json', payload)).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     return ok(data);
   }
 
@@ -330,7 +379,12 @@ export class InSales {
       signature,
       shop_id
     };
-    const { data } = await axios.post(server_url, payload);
+
+    const httpInstance = new HttpInstance({
+      baseUrl: server_url
+    });
+    const response = (await httpInstance.post<{ status: string; errors: string[] }>('/', payload)).unwrap();
+    const { data } = InSales.checkResponse(response).unwrap();
     if (data.status === 'ok') {
       return ok(null);
     }
@@ -342,7 +396,7 @@ export class InSales {
 
   static createAddDeliveryVariantPaymentAttribute(
     paymentGatewayId: PaymentGatewayId
-  ): AddDeliveryVariantPaymentAttribute {
+  ): DeliveryVariantAddPaymentAttribute {
     return {
       payment_gateway_id: paymentGatewayId
     };
@@ -350,7 +404,7 @@ export class InSales {
 
   static createAddDeliveryVariantPickUpSourceAttribute(
     pickUpSourceId: PickUpSourceId
-  ): DeliveryVariantPickUpSourceAddAttribute {
+  ): DeliveryVariantAddPickUpSourceAttribute {
     return {
       pick_up_source_id: pickUpSourceId
     };
@@ -358,7 +412,7 @@ export class InSales {
 
   static createRemoveDeliveryVariantPickUpSourceAttribute(
     deliveryVariantPickUpSourceAttributeId: DeliveryVariantPickUpSourceAttributeId
-  ): DeliveryVariantPickUpSourceRemoveAttribute {
+  ): DeliveryVariantRemovePickUpSourceAttribute {
     return { _destroy: 1, id: deliveryVariantPickUpSourceAttributeId };
   }
 }

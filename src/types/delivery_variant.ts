@@ -10,28 +10,28 @@ export type DeliveryVariantAddPaymentGateways = boolean;
 export type DeliveryVariantUrl = string;
 export type DeliveryVariantPickUpSourceAttributeId = number;
 export type DeliveryVariantPickUpSourceAttributeDestroy = 1;
-export type DeliveryVariantPickUpSourceRemoveAttribute = {
+export type DeliveryVariantRemovePickUpSourceAttribute = {
   _destroy: DeliveryVariantPickUpSourceAttributeDestroy;
   id: DeliveryVariantPickUpSourceAttributeId;
 };
-export type DeliveryVariantPickUpSourceAddAttribute = {
+export type DeliveryVariantAddPickUpSourceAttribute = {
   pick_up_source_id: PickUpSourceId;
 };
 export type DeliveryVariantPickUpSourceAttribute =
-  | DeliveryVariantPickUpSourceRemoveAttribute
-  | DeliveryVariantPickUpSourceAddAttribute;
+  | DeliveryVariantRemovePickUpSourceAttribute
+  | DeliveryVariantAddPickUpSourceAttribute;
 export type DeliveryVariantPaymentAttributeId = number;
 export type DeliveryVariantPaymentAttributeDestroy = 1;
-export type AddDeliveryVariantPaymentAttribute = {
+export type DeliveryVariantAddPaymentAttribute = {
   payment_gateway_id: PaymentGatewayId;
 };
-export type RemoveDeliveryVariantPaymentAttribute = {
+export type DeliveryVariantRemovePaymentAttribute = {
   _destroy: DeliveryVariantPaymentAttributeDestroy;
   id: DeliveryVariantPaymentAttributeId;
 };
 export type DeliveryVariantPaymentAttribute =
-  | AddDeliveryVariantPaymentAttribute
-  | RemoveDeliveryVariantPaymentAttribute;
+  | DeliveryVariantAddPaymentAttribute
+  | DeliveryVariantRemovePaymentAttribute;
 export type DeliveryVariant = {
   id: DeliveryVariantId;
   title: DeliveryVariantTitle;
