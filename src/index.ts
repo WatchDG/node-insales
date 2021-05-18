@@ -48,8 +48,11 @@ export class InSales {
     response: HttpResponse<DataType>
   ): TResult<{ status: number; headers: http.IncomingHttpHeaders; data: DataType }, Error> {
     const { status, headers, data } = response;
-    if (status !== 200) {
-      return fail(new Error(`Response status code not 200. Status code: ${status}`));
+    if (status < 200 || status >= 300) {
+      if (headers['content-type']?.includes('application/json') && data) {
+        return fail(new Error(`Failed status code: ${status} . ${JSON.stringify(data)}`));
+      }
+      return fail(new Error(`Failed status code: ${status}`));
     }
     if (!headers['content-type']?.includes('application/json')) {
       return fail(new Error(`Content type not application/json. Content type: ${headers['content-type']}`));
