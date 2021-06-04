@@ -20,7 +20,8 @@ import type {
   PaymentGatewayId,
   PaymentGateway,
   CreatePaymentGateway,
-  UpdatePaymentGateway
+  UpdatePaymentGateway,
+  PaymentGatewayDeliveryVariantId
 } from './types/payment_gateway';
 import type { PickUpSourceId, PickUpSource, CreatePickUpSource, UpdatePickUpSource } from './types/pick_up_source';
 import type { FieldId, CreateField, Field } from './types/field';
@@ -28,6 +29,10 @@ import type { WebHook, WebHookId, CreateWebHook, UpdateWebHook } from './types/w
 import type { DomainId, Domain } from './types/domain';
 import type { OrderId, Order } from './types/order';
 import { CreateDiscountCode, DiscountCode, DiscountCodeId, UpdateDiscountCode } from './types/discount_code';
+import {
+  PaymentGatewayPaymentDeliveryVariantsAttributeId,
+  RemovePaymentGatewayPaymentDeliveryVariantsAttribute
+} from './types/payment_gateway';
 
 /**
  * InSales
@@ -393,6 +398,20 @@ export class InSales {
   }
 
   @tryCatchAsync
+  async removeDeliveryVariantsFromPaymentGateway(
+    paymentGatewayId: PaymentGatewayId,
+    paymentGatewayDeliveryVariantIds: PaymentGatewayPaymentDeliveryVariantsAttributeId[]
+  ): TResultAsync<PaymentGateway, Error> {
+    const paymentGatewayDeliveryVariantAttributes = paymentGatewayDeliveryVariantIds.map(
+      InSales.createRemovePaymentGatewayDeliveryVariantAttribute
+    );
+    const payload = {
+      payment_delivery_variants_attributes: paymentGatewayDeliveryVariantAttributes
+    };
+    return this.updatePaymentGateway(paymentGatewayId, payload);
+  }
+
+  @tryCatchAsync
   async addPaymentsToDeliveryVariant(
     deliveryVariantId: DeliveryVariantId,
     deliveryVariantPaymentAttributeIds: PaymentGatewayId[]
@@ -463,5 +482,11 @@ export class InSales {
     deliveryVariantPickUpSourceAttributeId: DeliveryVariantPickUpSourceAttributeId
   ): DeliveryVariantRemovePickUpSourceAttribute {
     return { _destroy: 1, id: deliveryVariantPickUpSourceAttributeId };
+  }
+
+  static createRemovePaymentGatewayDeliveryVariantAttribute(
+    paymentGatewayDeliveryVariantId: PaymentGatewayDeliveryVariantId
+  ): RemovePaymentGatewayPaymentDeliveryVariantsAttribute {
+    return { _destroy: 1, id: paymentGatewayDeliveryVariantId };
   }
 }

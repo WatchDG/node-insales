@@ -4,5 +4,6 @@
 /.yarn
 /src/main.ts
 yarn.lock
+.yarnrc.yml
 package-lock.json
 yarn-error.log
